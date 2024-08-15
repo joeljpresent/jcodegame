@@ -25,7 +25,7 @@ export default function CodeGame() {
             },
             error: null,
         });
-        alert(result.error == null ? result.output.value : `Error on line ${result.error?.lineNumber}: ${result.error?.msg}`);
+        alert(result.error == null ? result.output.value : `${result.error.msg} on line ${result.error.lineNumber}`);
     }
 
     return <div>
