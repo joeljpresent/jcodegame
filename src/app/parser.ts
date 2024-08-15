@@ -1,6 +1,6 @@
 "use client";
 
-function runCommand(args: string[], state: CodeState) {
+function runCommand(args: string[], state: CodeState): CodeState {
   const parseValue = (val: string): number => {
     if (val.charAt(0) === "@") {
       return state.cells[parseInt(val.slice(1))];
@@ -17,6 +17,19 @@ function runCommand(args: string[], state: CodeState) {
     }
     throw Error("cell ID must start with @ or &");
   };
+
+  if (args[0] === "jump") {
+    const nextLineIdx = state.lineIdxOfLabels[args[1]];
+    if (nextLineIdx == null) {
+      throw Error(`could not find label ${args[1]}`);
+    }
+    state.lineIdx = nextLineIdx;
+    return state;
+  }
+
+  // TODO; jumpif lt/le/eq/ne/ge/gt VALUE LABEL
+
+  state.lineIdx += 1;
 
   switch (args[0]) {
     case "print": {
@@ -59,12 +72,13 @@ function runCommand(args: string[], state: CodeState) {
       state.currentValue = Math.floor(state.currentValue / parseValue(args[1]));
       return state;
     }
-    case "label": {
-      // the labels should have already been indexed, so this can be ignored now
+    case "label":
+    case "": {
       return state;
     }
-    // TODO: jump LABEL
-    // TODO; jumpif lt/le/eq/ne/ge/gt VALUE LABEL
+    default: {
+      throw Error(`unknown command: ${args[0]}`);
+    }
   }
 }
 
@@ -75,24 +89,28 @@ export function parseCode(code: string, state: CodeState) {
       state.lineIdxOfLabels[args[1]] = idx;
     }
   }
-  for (const [idx, args] of commands.entries()) {
+  let instructionCount = 0;
+  while (state.lineIdx < commands.length && instructionCount < 1000) {
+    const args = commands[state.lineIdx];
     try {
       runCommand(args, state);
       if (!Number.isSafeInteger(state.currentValue)) {
         throw Error(`resulting value is not a safe integer: ${state.currentValue}`);
       }
     } catch (err: unknown) {
-      state.error = { lineNumber: idx + 1, msg: String(err) };
+      state.error = { lineNumber: state.lineIdx + 1, msg: String(err) };
       return state;
     }
+    instructionCount += 1;
   }
   return state;
 }
 
 export interface CodeState {
   currentValue: number;
+  lineIdx: number;
   cells: number[];
-  lineIdxOfLabels: {[k: string]: number};
+  lineIdxOfLabels: { [k: string]: number };
   output: Output;
   error: null | Error;
 };
