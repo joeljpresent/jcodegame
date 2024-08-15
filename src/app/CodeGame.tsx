@@ -19,6 +19,7 @@ export default function CodeGame() {
         const result = parseCode(code, {
             currentValue: 0,
             cells: [0, 0, 0],
+            lineIdxOfLabels: {},
             output: {
                 kind: "numbers",
                 value: [],
@@ -26,6 +27,7 @@ export default function CodeGame() {
             error: null,
         });
         alert(result.error == null ? result.output.value : `${result.error.msg} on line ${result.error.lineNumber}`);
+        alert(JSON.stringify(result.lineIdxOfLabels, null, 4));
     }
 
     return <div>

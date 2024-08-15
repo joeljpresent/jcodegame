@@ -71,6 +71,11 @@ function runCommand(args: string[], state: CodeState) {
 export function parseCode(code: string, state: CodeState) {
   const commands = code.split("\n").map(line => line.trim().split(/\s+/g));
   for (const [idx, args] of commands.entries()) {
+    if (args[0] === "label") {
+      state.lineIdxOfLabels[args[1]] = idx;
+    }
+  }
+  for (const [idx, args] of commands.entries()) {
     try {
       runCommand(args, state);
       if (!Number.isSafeInteger(state.currentValue)) {
@@ -87,6 +92,7 @@ export function parseCode(code: string, state: CodeState) {
 export interface CodeState {
   currentValue: number;
   cells: number[];
+  lineIdxOfLabels: {[k: string]: number};
   output: Output;
   error: null | Error;
 };
