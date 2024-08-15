@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, MouseEvent, useState } from "react";
 import CodeInput from "./CodeInput";
 
 export default function CodeGame() {
@@ -10,7 +10,19 @@ export default function CodeGame() {
         setCode(e.currentTarget.value);
     }
 
-    return <>
+    function handleClear(e: MouseEvent<HTMLButtonElement>) {
+        setCode("");
+    }
+
+    function handleRun(e: MouseEvent<HTMLButtonElement>) {
+        alert(code);
+    }
+
+    return <div>
         <CodeInput value={code} onInput={handleInput} />
-    </>;
+        <div className="flex flex-row justify-between">
+            <button onClick={handleClear}>✕ Clear</button>
+            <button onClick={handleRun}>▶ Run</button>
+        </div>
+    </div>;
 }
