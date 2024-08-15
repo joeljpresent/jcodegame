@@ -1,7 +1,8 @@
 "use client";
 
-import { FormEvent, MouseEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import CodeInput from "./CodeInput";
+import { parseCode } from "./parser";
 
 export default function CodeGame() {
     const [code, setCode] = useState("");
@@ -10,12 +11,21 @@ export default function CodeGame() {
         setCode(e.currentTarget.value);
     }
 
-    function handleClear(e: MouseEvent<HTMLButtonElement>) {
+    function handleClear() {
         setCode("");
     }
 
-    function handleRun(e: MouseEvent<HTMLButtonElement>) {
-        alert(code);
+    function handleRun() {
+        const result = parseCode(code, {
+            currentValue: 0,
+            cells: [0, 0, 0],
+            output: {
+                kind: "numbers",
+                value: [],
+            },
+            error: null,
+        });
+        alert(result.error == null ? result.output.value : `Error on line ${result.error?.lineNumber}: ${result.error?.msg}`);
     }
 
     return <div>

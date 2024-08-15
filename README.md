@@ -6,13 +6,14 @@
 
 - print
 - load VALUE
-- store VALUE
+- store CELL
 - add VALUE
 - sub VALUE
 - mul VALUE
 - div VALUE
 - label LABEL
-- jump LABEL (lt/le/eq/ne/ge/gt VALUE)
+- jump
+- jumpif lt/le/eq/ne/ge/gt VALUE LABEL
 
 ### Values
 
