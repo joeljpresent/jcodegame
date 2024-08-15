@@ -89,10 +89,13 @@ export function parseCode(code: string, state: CodeState) {
       state.lineIdxOfLabels[args[1]] = idx;
     }
   }
-  let instructionCount = 0;
-  while (state.lineIdx < commands.length && instructionCount < 1000) {
-    const args = commands[state.lineIdx];
+
+  while (state.lineIdx < commands.length) {
     try {
+      if (state.instructionCount > state.maxInstructionCount) {
+        throw Error(`the program must not execute in more than ${state.maxInstructionCount} instructions`);
+      }
+      const args = commands[state.lineIdx];
       runCommand(args, state);
       if (!Number.isSafeInteger(state.currentValue)) {
         throw Error(`resulting value is not a safe integer: ${state.currentValue}`);
@@ -101,13 +104,15 @@ export function parseCode(code: string, state: CodeState) {
       state.error = { lineNumber: state.lineIdx + 1, msg: String(err) };
       return state;
     }
-    instructionCount += 1;
+    state.instructionCount += 1;
   }
   return state;
 }
 
 export interface CodeState {
   currentValue: number;
+  instructionCount: number;
+  maxInstructionCount: number;
   lineIdx: number;
   cells: number[];
   lineIdxOfLabels: { [k: string]: number };

@@ -18,6 +18,8 @@ export default function CodeGame() {
     function handleRun() {
         const result = parseCode(code, {
             lineIdx: 0,
+            instructionCount: 0,
+            maxInstructionCount: 1000,
             currentValue: 0,
             cells: [0, 0, 0],
             lineIdxOfLabels: {},
