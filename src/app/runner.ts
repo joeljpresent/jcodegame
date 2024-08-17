@@ -4,90 +4,108 @@ function isInt32(n: number) {
   return (n | 0) === n;
 }
 
-function runCommand(args: string[], state: CodeState): CodeState {
+function parseInt32(s: string) {
+  if (!/^-?(\d+|0x[0-9a-f]+)$/i.test(s)) {
+    throw Error(`could not parse int32: ${s}`);
+  }
+  const n = Number.parseInt(s);
+  if (!isInt32(n)) {
+    throw Error(`invalid int32: ${n}`);
+  }
+  return n | 0;
+}
+
+function runCommand(args: string[], state: CodeState): void {
   const checkCellIdx = (cellIdx: number): number => {
     if (!isInt32(cellIdx) || cellIdx < 0 || cellIdx >= state.cellCount) {
       throw Error(`invalid cell ID: ${cellIdx}`);
     }
     return cellIdx;
   }
+  const getCell = (cellIdx: number): number => {
+    return state.cells[checkCellIdx(cellIdx)];
+  }
   const parseValue = (val: string): number => {
     if (val.charAt(0) === "@") {
-      return state.cells[checkCellIdx(parseInt(val.slice(1)))];
+      return getCell(parseInt32(val.slice(1)));
     } else if (val.charAt(0) === "&") {
-      return checkCellIdx(state.cells[(state.cells[parseInt(val.slice(1))])]);
+      return getCell(getCell(parseInt32(val.slice(1))));
     }
-    return parseInt(val);
+    return parseInt32(val);
   };
   const parseCellId = (val: string): number => {
     if (val.charAt(0) === "@") {
-      return checkCellIdx(parseInt(val.slice(1)));
+      return checkCellIdx(parseInt32(val.slice(1)));
     } else if (val.charAt(0) === "&") {
-      return state.cells[checkCellIdx(parseInt(val.slice(1)))];
+      return checkCellIdx(getCell(parseInt32(val.slice(1))));
     }
     throw Error("cell ID must start with @ or &");
   };
 
-  if (args[0] === "jump") {
-    const nextLineIdx = state.lineIdxOfLabels[args[1]];
-    if (nextLineIdx == null) {
-      throw Error(`could not find label ${args[1]}`);
-    }
-    state.lineIdx = nextLineIdx;
-    return state;
-  } else if (args[0] === "jumpif") {
-    const nextLineIdx = state.lineIdxOfLabels[args[3]];
-    if (nextLineIdx == null) {
-      throw Error(`could not find label ${args[3]}`);
-    }
-    const CMPS: { [k: string]: (a: number, b: number) => boolean } = {
-      eq: (a, b) => a === b,
-      ne: (a, b) => a !== b,
-      lt: (a, b) => a < b,
-      le: (a, b) => a <= b,
-      gt: (a, b) => a > b,
-      ge: (a, b) => a >= b,
-    }
-    if (!Object.hasOwn(CMPS, args[1])) {
-      throw Error(`invalid comparision operator: ${args[1]}`);
-    }
-    const cmp = CMPS[args[1]];
-    const value = parseValue(args[2]);
-    if (cmp(state.currentValue, value)) {
-      state.lineIdx = nextLineIdx;
-    } else {
-      state.lineIdx += 1;
-    }
-    return state;
-  }
-
-  state.lineIdx += 1;
-
   switch (args[0]) {
+    case ("jump"): {
+      const nextLineIdx = state.lineIdxOfLabels[args[1]];
+      if (nextLineIdx == null) {
+        throw Error(`could not find label ${args[1]}`);
+      }
+      state.lineIdx = nextLineIdx;
+      return;
+    }
+    case ("jumpif"): {
+      const nextLineIdx = state.lineIdxOfLabels[args[3]];
+      if (nextLineIdx == null) {
+        throw Error(`could not find label ${args[3]}`);
+      }
+      const CMPS: { [k: string]: (a: number, b: number) => boolean } = {
+        eq: (a, b) => a === b,
+        ne: (a, b) => a !== b,
+        lt: (a, b) => a < b,
+        le: (a, b) => a <= b,
+        gt: (a, b) => a > b,
+        ge: (a, b) => a >= b,
+      }
+      if (!Object.hasOwn(CMPS, args[1])) {
+        throw Error(`invalid comparision operator: ${args[1]}`);
+      }
+      const cmp = CMPS[args[1]];
+      const value = parseValue(args[2]);
+      if (cmp(state.currentValue, value)) {
+        state.lineIdx = nextLineIdx;
+      } else {
+        state.lineIdx += 1;
+      }
+      return;
+    }
     case "print": {
       state.output.push(state.currentValue);
-      return state;
+      state.lineIdx += 1;
+      return;
     }
     case "load": {
       state.currentValue = parseValue(args[1]);
-      return state;
+      state.lineIdx += 1;
+      return;
     }
     case "store": {
       const cellId = parseCellId(args[1]);
       state.cells[cellId] = state.currentValue;
-      return state;
+      state.lineIdx += 1;
+      return;
     }
     case "add": {
       state.currentValue += parseValue(args[1]);
-      return state;
+      state.lineIdx += 1;
+      return;
     }
     case "sub": {
       state.currentValue -= parseValue(args[1]);
-      return state;
+      state.lineIdx += 1;
+      return;
     }
     case "label":
     case "": {
-      return state;
+      state.lineIdx += 1;
+      return;
     }
     default: {
       throw Error(`unknown command: ${args[0]}`);
