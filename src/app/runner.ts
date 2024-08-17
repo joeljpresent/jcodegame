@@ -92,42 +92,46 @@ function runCommand(args: string[], state: CodeState): CodeState {
   }
 }
 
-export function parseCode(code: string, settings: CodeSettings) {
+export function parseAndRun(code: string, settings: CodeSettings) {
+  const commands = code.split(/\r?\n/g).map(line => line.trim().split(/\s+/g));
+
   const state: CodeState = {
     ...settings,
     lineIdx: 0,
     instructionCount: 0,
     currentValue: 0,
     cells: new Int32Array(settings.cellCount),
+    commands,
     lineIdxOfLabels: {},
     output: [],
     error: null,
   };
-
-  const commands = code.split(/\r?\n/g).map(line => line.trim().split(/\s+/g));
   for (const [idx, args] of commands.entries()) {
     if (args[0] === "label") {
       state.lineIdxOfLabels[args[1]] = idx;
     }
   }
 
-  while (state.lineIdx < commands.length) {
-    try {
-      if (state.instructionCount > state.maxInstructionCount) {
-        throw Error(`the program must not execute in more than ${state.maxInstructionCount} instructions`);
-      }
-      const args = commands[state.lineIdx];
-      runCommand(args, state);
-      if (!isInt32(state.currentValue)) {
-        throw Error(`resulting value is not a 32-bit integer: ${state.currentValue}`);
-      }
-    } catch (err: unknown) {
-      state.error = { lineNumber: state.lineIdx + 1, msg: String(err) };
-      return state;
-    }
-    state.instructionCount += 1;
+  while (state.lineIdx < commands.length && state.error == null) {
+    runNextStep(state);
   }
   return state;
+}
+
+export function runNextStep(state: CodeState) {
+  try {
+    if (state.instructionCount > state.maxInstructionCount) {
+      throw Error(`the program must not execute in more than ${state.maxInstructionCount} instructions`);
+    }
+    const args = state.commands[state.lineIdx];
+    runCommand(args, state);
+    if (!isInt32(state.currentValue)) {
+      throw Error(`resulting value is not an int32: ${state.currentValue}`);
+    }
+  } catch (err: unknown) {
+    state.error = { lineNumber: state.lineIdx + 1, msg: String(err) };
+  }
+  state.instructionCount += 1;
 }
 
 export interface CodeSettings {
@@ -136,6 +140,7 @@ export interface CodeSettings {
 }
 
 interface BaseCodeState {
+  commands: string[][];
   currentValue: number;
   instructionCount: number;
   lineIdx: number;

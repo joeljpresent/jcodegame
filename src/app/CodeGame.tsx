@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import CodeInput from "./CodeInput";
-import { CodeError, parseCode as parseAndRun } from "./runner";
+import { CodeError, parseAndRun } from "./runner";
 import CodeOutput from "./CodeOutput";
 
 export default function CodeGame() {
