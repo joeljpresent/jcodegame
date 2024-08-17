@@ -59,15 +59,7 @@ function runCommand(args: string[], state: CodeState): CodeState {
 
   switch (args[0]) {
     case "print": {
-      if (state.output.kind === "unicode") {
-        if (isUnicodeCodePoint(state.currentValue)) {
-          state.output.value += String.fromCodePoint(state.currentValue);
-        } else {
-          throw Error(`invalid Unicode code point: 0x${state.currentValue.toString(16)}`);
-        }
-      } else {
-        state.output.value.push(state.currentValue);
-      }
+      state.output.push(state.currentValue);
       return state;
     }
     case "load": {
@@ -135,19 +127,11 @@ export interface CodeState {
   cellCount: number;
   cells: Int32Array;
   lineIdxOfLabels: { [k: string]: number };
-  output: Output;
+  output: number[];
   error: null | Error;
 };
-
-export type Output =
-  { kind: "numbers", value: number[] }
-  | { kind: "unicode", value: string };
 
 export interface Error {
   lineNumber: number;
   msg: string;
-}
-
-function isUnicodeCodePoint(n: number) {
-  return n >= 0 && n <= 0x10ffff && !(n >= 0xd800 && n <= 0xdfff);
 }
