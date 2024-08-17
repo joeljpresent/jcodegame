@@ -5,19 +5,25 @@ function isInt32(n: number) {
 }
 
 function runCommand(args: string[], state: CodeState): CodeState {
+  const checkCellIdx = (cellIdx: number): number => {
+    if (!isInt32(cellIdx) || cellIdx < 0 || cellIdx >= state.cellCount) {
+      throw Error(`invalid cell ID: ${cellIdx}`);
+    }
+    return cellIdx;
+  }
   const parseValue = (val: string): number => {
     if (val.charAt(0) === "@") {
-      return state.cells[parseInt(val.slice(1))];
+      return state.cells[checkCellIdx(parseInt(val.slice(1)))];
     } else if (val.charAt(0) === "&") {
-      return state.cells[state.cells[parseInt(val.slice(1))]];
+      return checkCellIdx(state.cells[(state.cells[parseInt(val.slice(1))])]);
     }
     return parseInt(val);
   };
   const parseCellId = (val: string): number => {
     if (val.charAt(0) === "@") {
-      return parseInt(val.slice(1));
+      return checkCellIdx(parseInt(val.slice(1)));
     } else if (val.charAt(0) === "&") {
-      return state.cells[parseInt(val.slice(1))];
+      return state.cells[checkCellIdx(parseInt(val.slice(1)))];
     }
     throw Error("cell ID must start with @ or &");
   };
@@ -68,9 +74,6 @@ function runCommand(args: string[], state: CodeState): CodeState {
     }
     case "store": {
       const cellId = parseCellId(args[1]);
-      if (!isInt32(cellId) || cellId < 0 || cellId >= state.cells.length) {
-        throw Error(`invalid cell ID: ${cellId}`);
-      }
       state.cells[cellId] = state.currentValue;
       return state;
     }
@@ -92,9 +95,16 @@ function runCommand(args: string[], state: CodeState): CodeState {
   }
 }
 
-export function parseAndRun(code: string, settings: CodeSettings) {
-  const commands = code.split(/\r?\n/g).map(line => line.trim().split(/\s+/g));
+export function runScript(code: string, settings: CodeSettings) {
+  const state = initCodeState(code, settings);
+  while (state.lineIdx < state.commands.length && state.error == null) {
+    runNextStep(state);
+  }
+  return state;
+}
 
+export function initCodeState(code: string, settings: CodeSettings) {
+  const commands = code.split("\n").map(line => line.trim().split(/\s+/g));
   const state: CodeState = {
     ...settings,
     lineIdx: 0,
@@ -106,15 +116,13 @@ export function parseAndRun(code: string, settings: CodeSettings) {
     output: [],
     error: null,
   };
-  for (const [idx, args] of commands.entries()) {
+
+  for (const [idx, args] of state.commands.entries()) {
     if (args[0] === "label") {
       state.lineIdxOfLabels[args[1]] = idx;
     }
   }
 
-  while (state.lineIdx < commands.length && state.error == null) {
-    runNextStep(state);
-  }
   return state;
 }
 

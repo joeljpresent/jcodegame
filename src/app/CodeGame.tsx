@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import CodeInput from "./CodeInput";
-import { CodeError, parseAndRun } from "./runner";
+import { CodeError, runScript } from "./runner";
 import CodeOutput from "./CodeOutput";
 
 export default function CodeGame() {
@@ -26,7 +26,7 @@ export default function CodeGame() {
   }
 
   function handleRun() {
-    const result = parseAndRun(code, {
+    const result = runScript(code, {
       maxInstructionCount: 10000,
       cellCount: 16,
     });
