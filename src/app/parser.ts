@@ -25,9 +25,31 @@ function runCommand(args: string[], state: CodeState): CodeState {
     }
     state.lineIdx = nextLineIdx;
     return state;
+  } else if (args[0] === "jumpif") {
+    const nextLineIdx = state.lineIdxOfLabels[args[3]];
+    if (nextLineIdx == null) {
+      throw Error(`could not find label ${args[3]}`);
+    }
+    const CMPS: { [k: string]: (a: number, b: number) => boolean } = {
+      eq: (a, b) => a === b,
+      ne: (a, b) => a !== b,
+      lt: (a, b) => a < b,
+      le: (a, b) => a <= b,
+      gt: (a, b) => a > b,
+      ge: (a, b) => a >= b,
+    }
+    if (!Object.hasOwn(CMPS, args[1])) {
+      throw Error(`invalid comparision operator: ${args[1]}`);
+    }
+    const cmp = CMPS[args[1]];
+    const value = parseValue(args[2]);
+    if (cmp(state.currentValue, value)) {
+      state.lineIdx = nextLineIdx;
+    } else {
+      state.lineIdx += 1;
+    }
+    return state;
   }
-
-  // TODO; jumpif lt/le/eq/ne/ge/gt VALUE LABEL
 
   state.lineIdx += 1;
 
