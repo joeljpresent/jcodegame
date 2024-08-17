@@ -1,5 +1,9 @@
 "use client";
 
+function isInt32(n: number) {
+  return (n | 0) === n;
+}
+
 function runCommand(args: string[], state: CodeState): CodeState {
   const parseValue = (val: string): number => {
     if (val.charAt(0) === "@") {
@@ -72,7 +76,7 @@ function runCommand(args: string[], state: CodeState): CodeState {
     }
     case "store": {
       const cellId = parseCellId(args[1]);
-      if (!Number.isSafeInteger(cellId) || cellId < 0 || cellId >= state.cells.length) {
+      if (!isInt32(cellId) || cellId < 0 || cellId >= state.cells.length) {
         throw Error(`invalid cell ID: ${cellId}`);
       }
       state.cells[cellId] = state.currentValue;
@@ -111,8 +115,8 @@ export function parseCode(code: string, state: CodeState) {
       }
       const args = commands[state.lineIdx];
       runCommand(args, state);
-      if (!Number.isSafeInteger(state.currentValue)) {
-        throw Error(`resulting value is not a safe integer: ${state.currentValue}`);
+      if (!isInt32(state.currentValue)) {
+        throw Error(`resulting value is not a 32-bit integer: ${state.currentValue}`);
       }
     } catch (err: unknown) {
       state.error = { lineNumber: state.lineIdx + 1, msg: String(err) };
@@ -128,7 +132,8 @@ export interface CodeState {
   instructionCount: number;
   maxInstructionCount: number;
   lineIdx: number;
-  cells: number[];
+  cellCount: number;
+  cells: Int32Array;
   lineIdxOfLabels: { [k: string]: number };
   output: Output;
   error: null | Error;

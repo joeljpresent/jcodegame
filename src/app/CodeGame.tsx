@@ -21,7 +21,8 @@ export default function CodeGame() {
             instructionCount: 0,
             maxInstructionCount: 1000,
             currentValue: 0,
-            cells: [0, 0, 0],
+            cellCount: 3,
+            cells: new Int32Array(3),
             lineIdxOfLabels: {},
             output: {
                 kind: "numbers",
