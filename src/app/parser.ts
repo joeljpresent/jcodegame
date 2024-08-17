@@ -92,8 +92,19 @@ function runCommand(args: string[], state: CodeState): CodeState {
   }
 }
 
-export function parseCode(code: string, state: CodeState) {
-  const commands = code.split("\n").map(line => line.trim().split(/\s+/g));
+export function parseCode(code: string, settings: CodeSettings) {
+  const state: CodeState = {
+    ...settings,
+    lineIdx: 0,
+    instructionCount: 0,
+    currentValue: 0,
+    cells: new Int32Array(settings.cellCount),
+    lineIdxOfLabels: {},
+    output: [],
+    error: null,
+  };
+
+  const commands = code.split(/\r?\n/g).map(line => line.trim().split(/\s+/g));
   for (const [idx, args] of commands.entries()) {
     if (args[0] === "label") {
       state.lineIdxOfLabels[args[1]] = idx;
@@ -119,17 +130,22 @@ export function parseCode(code: string, state: CodeState) {
   return state;
 }
 
-export interface CodeState {
+export interface CodeSettings {
+  maxInstructionCount: number;
+  cellCount: number;
+}
+
+interface BaseCodeState {
   currentValue: number;
   instructionCount: number;
-  maxInstructionCount: number;
   lineIdx: number;
-  cellCount: number;
   cells: Int32Array;
   lineIdxOfLabels: { [k: string]: number };
   output: number[];
   error: null | CodeError;
 };
+
+export type CodeState = CodeSettings & BaseCodeState;
 
 export interface CodeError {
   lineNumber: number;
