@@ -9,8 +9,6 @@
 - store CELL
 - add VALUE
 - sub VALUE
-- mul VALUE
-- div VALUE
 - label LABEL
 - jump
 - jumpif lt/le/eq/ne/ge/gt VALUE LABEL

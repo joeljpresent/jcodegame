@@ -86,14 +86,6 @@ function runCommand(args: string[], state: CodeState): CodeState {
       state.currentValue -= parseValue(args[1]);
       return state;
     }
-    case "mul": {
-      state.currentValue *= parseValue(args[1]);
-      return state;
-    }
-    case "div": {
-      state.currentValue = Math.floor(state.currentValue / parseValue(args[1]));
-      return state;
-    }
     case "label":
     case "": {
       return state;
@@ -154,14 +146,3 @@ export interface Error {
 function isUnicodeCodePoint(n: number) {
   return n >= 0 && n <= 0x10ffff && !(n >= 0xd800 && n <= 0xdfff);
 }
-/*
-- print
-- load VALUE
-- store VALUE
-- add VALUE
-- sub VALUE
-- mul VALUE
-- div VALUE
-- label LABEL
-- jump LABEL (lt/le/eq/ne/ge/gt VALUE)
-*/
