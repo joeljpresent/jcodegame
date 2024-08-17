@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
-import { CodeError } from "./parser";
+import { CodeError } from "./runner";
 
 export default function CodeOutput({
   output, error, isTextMode, onToggleTextMode
