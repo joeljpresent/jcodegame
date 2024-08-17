@@ -2,13 +2,13 @@
 
 import { FormEvent, useState } from "react";
 import CodeInput from "./CodeInput";
-import { parseCode } from "./parser";
+import { CodeError, parseCode as parseAndRun } from "./parser";
 import CodeOutput from "./CodeOutput";
 
 export default function CodeGame() {
     const [code, setCode] = useState("");
     const [output, setOutput] = useState<number[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<CodeError | null>(null);
     const [isTextMode, setIsTextMode] = useState(false);
 
     function handleInput(e: FormEvent<HTMLTextAreaElement>) {
@@ -17,6 +17,8 @@ export default function CodeGame() {
 
     function handleClear() {
         setCode("");
+        setOutput([]);
+        setError(null);
     }
 
     function handleToggleTextMode() {
@@ -24,10 +26,10 @@ export default function CodeGame() {
     }
 
     function handleRun() {
-        const result = parseCode(code, {
+        const result = parseAndRun(code, {
             lineIdx: 0,
             instructionCount: 0,
-            maxInstructionCount: 1000,
+            maxInstructionCount: 10000,
             currentValue: 0,
             cellCount: 3,
             cells: new Int32Array(3),
@@ -36,11 +38,7 @@ export default function CodeGame() {
             error: null,
         });
         setOutput(result.output);
-        if (result.error != null) {
-            setError(`${result.error.msg} on line ${result.error.lineNumber}`);
-        } else {
-            setError(null);
-        }
+        setError(result.error);
     }
 
     return <div>

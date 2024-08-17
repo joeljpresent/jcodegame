@@ -128,10 +128,10 @@ export interface CodeState {
   cells: Int32Array;
   lineIdxOfLabels: { [k: string]: number };
   output: number[];
-  error: null | Error;
+  error: null | CodeError;
 };
 
-export interface Error {
+export interface CodeError {
   lineNumber: number;
   msg: string;
 }

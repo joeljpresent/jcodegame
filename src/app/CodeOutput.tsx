@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
+import { CodeError } from "./parser";
 
 export default function CodeOutput({
   output, error, isTextMode, onToggleTextMode
@@ -14,6 +15,17 @@ export default function CodeOutput({
     return <p>{output.join(", ")}</p>
   }
 
+  function errorDisplay() {
+    if (error == null) {
+      return <></>;
+    }
+    return (
+      <p style={{ color: "red" }}>
+        {error.msg} on line {error.lineNumber}
+      </p>
+    )
+  }
+
   return <>
     <div className="flex flex-row justify-between">
       <label htmlFor="toggleTextModeButton">
@@ -25,14 +37,14 @@ export default function CodeOutput({
     </div>
     <div>
       {outputDisplay()}
-      {error != null && <p style={{ color: "red" }}>{error}</p>}
+      {errorDisplay()}
     </div>
   </>;
 }
 
 interface CodeOutputProps {
   output: number[],
-  error: string | null,
+  error: CodeError | null,
   isTextMode: boolean,
   onToggleTextMode: (e: FormEvent<HTMLButtonElement>) => void,
 }
