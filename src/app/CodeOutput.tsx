@@ -10,7 +10,7 @@ export default function CodeOutput({
     if (output.length === 0) {
       return <p><i>Empty output.</i></p>
     } else if (isTextMode) {
-      return <p>{toUnicode(output)}</p>
+      return <p><pre>{toUnicode(output)}</pre></p>
     }
     return <p>{output.join(", ")}</p>
   }

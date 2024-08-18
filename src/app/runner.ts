@@ -32,8 +32,17 @@ function runCommand(args: string[], state: CodeState): void {
       return getCell(getCell(parseInt32(val.slice(1))));
     } else if (/^'[^\x00-\x1f'\\]'$/u.test(val)) {
       return val.codePointAt(1)!;
-    } else if (/^'\\[\\']'$/u.test(val)) {
-      return val.codePointAt(2)!;
+    } else if (/^'\\[\\'bfnrt]'$/u.test(val)) {
+      const ESCAPE: {[k: string]: number} = {
+        "\\": "\\".charCodeAt(0),
+        "'": "'".charCodeAt(0),
+        b: "\b".charCodeAt(0),
+        f: "\f".charCodeAt(0),
+        n: "\n".charCodeAt(0),
+        r: "\r".charCodeAt(0),
+        t: "\t".charCodeAt(0),
+      };
+      return ESCAPE[val.charAt(2)!];
     }
     return parseInt32(val);
   };
