@@ -115,7 +115,7 @@ function runCommand(args: string[], state: CodeState): void {
 
 export function runScript(code: string, settings: CodeSettings) {
   const state = initCodeState(code, settings);
-  while (state.lineIdx < state.commands.length && state.error == null) {
+  while (shouldCodeContinue(state)) {
     runNextStep(state);
   }
   return state;
@@ -181,4 +181,8 @@ export type CodeState = CodeSettings & BaseCodeState;
 export interface CodeError {
   lineNumber: number;
   msg: string;
+}
+
+export function shouldCodeContinue(state: CodeState) {
+  return state.lineIdx < state.commands.length && state.error == null;
 }
