@@ -1,5 +1,7 @@
 "use client";
 
+import { lexScript } from "./lexer";
+
 function isInt32(n: number) {
   return (n | 0) === n;
 }
@@ -116,7 +118,7 @@ function runCommand(args: string[], state: CodeState): void {
       return;
     }
     case "label":
-    case "": {
+    case undefined: {
       state.lineIdx += 1;
       return;
     }
@@ -135,20 +137,17 @@ export function runScript(code: string, settings: CodeSettings) {
 }
 
 export function initCodeState(code: string, settings: CodeSettings) {
-  const commands = code
-    .replace(/#[^\n]+\n/g, "\n")
-    .split("\n")
-    .map(line => line.trim().split(/(?<!')\s+|\s+(?!')/g));
+  const lexing = lexScript(code);
   const state: CodeState = {
     ...settings,
     lineIdx: 0,
     instructionCount: 0,
     currentValue: 0,
     cells: new Int32Array(settings.cellCount),
-    commands,
+    commands: isCodeError(lexing) ? [] : lexing,
     lineIdxOfLabels: {},
     output: [],
-    error: null,
+    error: isCodeError(lexing) ? lexing : null,
   };
 
   for (const [idx, args] of state.commands.entries()) {
@@ -197,6 +196,12 @@ export type CodeState = CodeSettings & BaseCodeState;
 export interface CodeError {
   lineNumber: number;
   msg: string;
+}
+
+export function isCodeError(v: unknown): v is CodeError {
+  return v != null && typeof v === "object"
+    && Object.hasOwn(v, "lineNumber")
+    && Object.hasOwn(v, "msg");
 }
 
 export function shouldCodeContinue(state: CodeState) {
