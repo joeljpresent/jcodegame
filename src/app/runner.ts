@@ -30,6 +30,10 @@ function runCommand(args: string[], state: CodeState): void {
       return getCell(parseInt32(val.slice(1)));
     } else if (val.charAt(0) === "&") {
       return getCell(getCell(parseInt32(val.slice(1))));
+    } else if (/^'[^\x00-\x1f'\\]'$/u.test(val)) {
+      return val.codePointAt(1)!;
+    } else if (/^'\\[\\']'$/u.test(val)) {
+      return val.codePointAt(2)!;
     }
     return parseInt32(val);
   };
@@ -122,7 +126,7 @@ export function runScript(code: string, settings: CodeSettings) {
 }
 
 export function initCodeState(code: string, settings: CodeSettings) {
-  const commands = code.split("\n").map(line => line.trim().split(/\s+/g));
+  const commands = code.split("\n").map(line => line.trim().split(/(?<!')\s+|\s+(?!')/g));
   const state: CodeState = {
     ...settings,
     lineIdx: 0,
