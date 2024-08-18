@@ -1,6 +1,6 @@
 "use client";
 
-import { CodeError, isCodeError } from "./runner";
+import { CodeError, isCodeError } from "./error";
 
 function isWhiteSpace(char: string) {
   return [" ", "\t", "\r"].includes(char);

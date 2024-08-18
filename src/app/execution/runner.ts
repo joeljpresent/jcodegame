@@ -1,6 +1,6 @@
 "use client";
 
-import { lexScript } from "./lexer";
+import { CodeSettings, CodeState, initCodeState, shouldCodeContinue } from "./state";
 
 function isInt32(n: number) {
   return (n | 0) === n;
@@ -136,29 +136,6 @@ export function runScript(code: string, settings: CodeSettings) {
   return state;
 }
 
-export function initCodeState(code: string, settings: CodeSettings) {
-  const lexing = lexScript(code);
-  const state: CodeState = {
-    ...settings,
-    lineIdx: 0,
-    instructionCount: 0,
-    currentValue: 0,
-    cells: new Int32Array(settings.cellCount),
-    commands: isCodeError(lexing) ? [] : lexing,
-    lineIdxOfLabels: {},
-    output: [],
-    error: isCodeError(lexing) ? lexing : null,
-  };
-
-  for (const [idx, args] of state.commands.entries()) {
-    if (args[0] === "label") {
-      state.lineIdxOfLabels[args[1]] = idx;
-    }
-  }
-
-  return state;
-}
-
 export function runNextStep(state: CodeState) {
   try {
     if (state.instructionCount > state.maxInstructionCount) {
@@ -173,37 +150,4 @@ export function runNextStep(state: CodeState) {
     state.error = { lineNumber: state.lineIdx + 1, msg: String(err) };
   }
   state.instructionCount += 1;
-}
-
-export interface CodeSettings {
-  maxInstructionCount: number;
-  cellCount: number;
-}
-
-interface BaseCodeState {
-  commands: string[][];
-  currentValue: number;
-  instructionCount: number;
-  lineIdx: number;
-  cells: Int32Array;
-  lineIdxOfLabels: { [k: string]: number };
-  output: number[];
-  error: null | CodeError;
-};
-
-export type CodeState = CodeSettings & BaseCodeState;
-
-export interface CodeError {
-  lineNumber: number;
-  msg: string;
-}
-
-export function isCodeError(v: unknown): v is CodeError {
-  return v != null && typeof v === "object"
-    && Object.hasOwn(v, "lineNumber")
-    && Object.hasOwn(v, "msg");
-}
-
-export function shouldCodeContinue(state: CodeState) {
-  return state.lineIdx < state.commands.length && state.error == null;
 }
