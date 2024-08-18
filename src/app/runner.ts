@@ -33,7 +33,7 @@ function runCommand(args: string[], state: CodeState): void {
     } else if (/^'[^\x00-\x1f'\\]'$/u.test(val)) {
       return val.codePointAt(1)!;
     } else if (/^'\\[\\'bfnrt]'$/u.test(val)) {
-      const ESCAPE: {[k: string]: number} = {
+      const ESCAPE: { [k: string]: number } = {
         "\\": "\\".charCodeAt(0),
         "'": "'".charCodeAt(0),
         b: "\b".charCodeAt(0),
@@ -135,7 +135,10 @@ export function runScript(code: string, settings: CodeSettings) {
 }
 
 export function initCodeState(code: string, settings: CodeSettings) {
-  const commands = code.split("\n").map(line => line.trim().split(/(?<!')\s+|\s+(?!')/g));
+  const commands = code
+    .replace(/#[^\n]+\n/g, "\n")
+    .split("\n")
+    .map(line => line.trim().split(/(?<!')\s+|\s+(?!')/g));
   const state: CodeState = {
     ...settings,
     lineIdx: 0,
