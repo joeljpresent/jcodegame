@@ -1,4 +1,5 @@
 import { CodeState } from "./execution/state";
+import { toUnicodeChar } from "./utils";
 
 export default function StepByStepCode({ codeState }: StepByStepCodeProps) {
   function commandLine(args: string[], idx: number) {
@@ -15,6 +16,7 @@ export default function StepByStepCode({ codeState }: StepByStepCodeProps) {
 
   return <div>
     {codeState.commands.map((args, idx) => commandLine(args, idx))}
+    <p>Current value: {codeState.currentValue} ({toUnicodeChar(codeState.currentValue)})</p>
   </div>;
 }
 

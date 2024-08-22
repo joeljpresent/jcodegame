@@ -61,7 +61,7 @@ export default function CodeGame() {
   return <div>
     <div>
       <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
-      <label htmlFor="stepByStepCheckbox">Step by step mode</label>
+      <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
     </div>
     {
       isStepByStep && codeState != null
