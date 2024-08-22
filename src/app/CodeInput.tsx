@@ -2,7 +2,7 @@
 
 import { FormEvent } from "react";
 
-export default function CodeInput({ value, onInput }: CodeInputProps) {
+export default function CodeInput({ value, onInput }: Props) {
   return (
     <textarea
       value={value}
@@ -16,7 +16,7 @@ export default function CodeInput({ value, onInput }: CodeInputProps) {
   );
 }
 
-interface CodeInputProps {
+interface Props {
   value: string,
   onInput: (e: FormEvent<HTMLTextAreaElement>) => void,
 }

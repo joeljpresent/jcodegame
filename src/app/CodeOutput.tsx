@@ -3,9 +3,7 @@
 import { FormEvent } from "react";
 import { CodeError } from "./execution/error";
 
-export default function CodeOutput({
-  output, error, isTextMode, onToggleTextMode
-}: CodeOutputProps) {
+export default function CodeOutput({ output, error, isTextMode, onToggleTextMode }: Props) {
   function outputDisplay() {
     if (output.length === 0) {
       return <p><i>Empty output.</i></p>
@@ -42,7 +40,7 @@ export default function CodeOutput({
   </>;
 }
 
-interface CodeOutputProps {
+interface Props {
   output: number[],
   error: CodeError | null,
   isTextMode: boolean,

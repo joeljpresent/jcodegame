@@ -5,6 +5,7 @@ import CodeInput from "./CodeInput";
 import CodeOutput from "./CodeOutput";
 import { CodeState, initCodeState, shouldCodeContinue } from "./execution/state";
 import { runNextStep, runScript } from "./execution/runner";
+import StepByStepCode from "./StepByStepCode";
 
 export default function CodeGame() {
   const [code, setCode] = useState("");
@@ -37,13 +38,13 @@ export default function CodeGame() {
   }
 
   function handleRunNextStep() {
-    if (codeState != null && !shouldCodeContinue(codeState)) {
+    if (codeState == null) {
+      setCodeState(initCodeState(code, settings));
+      return;
+    } else if (!shouldCodeContinue(codeState)) {
       return;
     }
-    let newCodeState = structuredClone(codeState);
-    if (newCodeState == null) {
-      newCodeState = initCodeState(code, settings);
-    }
+    const newCodeState = structuredClone(codeState);
     runNextStep(newCodeState);
     setCodeState(newCodeState);
   }
@@ -62,7 +63,11 @@ export default function CodeGame() {
       <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
       <label htmlFor="stepByStepCheckbox">Step by step mode</label>
     </div>
-    <CodeInput value={code} onInput={handleInput} />
+    {
+      isStepByStep && codeState != null
+        ? <StepByStepCode codeState={codeState} />
+        : <CodeInput value={code} onInput={handleInput} />
+    }
     <div className="flex flex-row justify-between">
       <button onClick={handleClear}>✕ Clear</button>
       {
