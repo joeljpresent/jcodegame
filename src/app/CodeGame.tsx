@@ -10,8 +10,6 @@ import { runNextStep, runScript } from "./execution/runner";
 export default function CodeGame() {
   const [code, setCode] = useState("");
   const [isStepByStep, setIsStepByStep] = useState(false);
-  const [output, setOutput] = useState<number[]>([]);
-  const [error, setError] = useState<CodeError | null>(null);
   const [isTextMode, setIsTextMode] = useState(false);
   const [codeState, setCodeState] = useState<CodeState | null>(null);
 
@@ -20,19 +18,13 @@ export default function CodeGame() {
     cellCount: 16,
   };
 
-  function resetCodeState() {
-    setCodeState(null);
-    setOutput([]);
-    setError(null);
-  }
-
   function handleInput(e: FormEvent<HTMLTextAreaElement>) {
     setCode(e.currentTarget.value);
   }
 
   function handleClear() {
     setCode("");
-    resetCodeState();
+    setCodeState(null);
   }
 
   function handleToggleTextMode() {
@@ -41,8 +33,7 @@ export default function CodeGame() {
 
   function handleRun() {
     const result = runScript(code, settings);
-    setOutput(result.output);
-    setError(result.error);
+    setCodeState(result);
   }
 
   function handleRunNextStep() {
@@ -55,17 +46,15 @@ export default function CodeGame() {
     }
     runNextStep(newCodeState);
     setCodeState(newCodeState);
-    setOutput(newCodeState.output);
-    setError(newCodeState.error);
   }
 
   function handleToggleStepByStep() {
     setIsStepByStep(!isStepByStep);
-    resetCodeState();
+    setCodeState(null);
   }
 
   function handleResetCodeState() {
-    resetCodeState();
+    setCodeState(null);
   }
 
   return <div>
@@ -91,8 +80,8 @@ export default function CodeGame() {
 
     </div>
     <CodeOutput
-      output={output}
-      error={error}
+      output={codeState?.output ?? []}
+      error={codeState?.error ?? null}
       isTextMode={isTextMode}
       onToggleTextMode={handleToggleTextMode}
     />
