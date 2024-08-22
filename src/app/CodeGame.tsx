@@ -6,6 +6,7 @@ import CodeOutput from "./CodeOutput";
 import { CodeState, initCodeState, shouldCodeContinue } from "./execution/state";
 import { runNextStep, runScript } from "./execution/runner";
 import StepByStepCode from "./StepByStepCode";
+import StepByStepValues from "./StepByStepValues";
 
 export default function CodeGame() {
   const [code, setCode] = useState("");
@@ -82,7 +83,6 @@ export default function CodeGame() {
           </>
           : <button onClick={handleRun}>▶ Run</button>
       }
-
     </div>
     <CodeOutput
       output={codeState?.output ?? []}
@@ -90,5 +90,6 @@ export default function CodeGame() {
       isTextMode={isTextMode}
       onToggleTextMode={handleToggleTextMode}
     />
+    {isStepByStep && codeState != null && <StepByStepValues codeState={codeState} />}
   </div>;
 }

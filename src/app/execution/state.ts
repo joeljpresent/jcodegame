@@ -13,7 +13,7 @@ interface BaseCodeState {
   currentValue: number;
   instructionCount: number;
   lineIdx: number;
-  cells: Int32Array;
+  cells: number[];
   lineIdxOfLabels: { [k: string]: number };
   output: number[];
   error: null | CodeError;
@@ -28,7 +28,7 @@ export function initCodeState(code: string, settings: CodeSettings) {
     lineIdx: 0,
     instructionCount: 0,
     currentValue: 0,
-    cells: new Int32Array(settings.cellCount),
+    cells: new Array(settings.cellCount).fill(0),
     commands: isCodeError(lexing) ? [] : lexing,
     lineIdxOfLabels: {},
     output: [],
