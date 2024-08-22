@@ -19,6 +19,7 @@ export default function CodeGame() {
 
   function handleInput(e: FormEvent<HTMLTextAreaElement>) {
     setCode(e.currentTarget.value);
+    setCodeState(null);
   }
 
   function handleClear() {
