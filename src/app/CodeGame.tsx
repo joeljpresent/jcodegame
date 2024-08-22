@@ -3,7 +3,6 @@
 import { FormEvent, useState } from "react";
 import CodeInput from "./CodeInput";
 import CodeOutput from "./CodeOutput";
-import { CodeError } from "./execution/error";
 import { CodeState, initCodeState, shouldCodeContinue } from "./execution/state";
 import { runNextStep, runScript } from "./execution/runner";
 

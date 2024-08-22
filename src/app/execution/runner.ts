@@ -56,9 +56,15 @@ function runCommand(args: string[], state: CodeState): void {
     }
     throw Error("cell ID must start with @ or &");
   };
+  const assertArgCount = (count: number) => {
+    if (args.length - 1 !== count) {
+      throw Error(`expected ${count} args for command ${args[0]}, got ${args.length - 1}`);
+    }
+  }
 
   switch (args[0]) {
     case ("jump"): {
+      assertArgCount(0);
       const nextLineIdx = state.lineIdxOfLabels[args[1]];
       if (nextLineIdx == null) {
         throw Error(`could not find label ${args[1]}`);
@@ -67,6 +73,7 @@ function runCommand(args: string[], state: CodeState): void {
       return;
     }
     case ("jumpif"): {
+      assertArgCount(3);
       const nextLineIdx = state.lineIdxOfLabels[args[3]];
       if (nextLineIdx == null) {
         throw Error(`could not find label ${args[3]}`);
@@ -92,27 +99,32 @@ function runCommand(args: string[], state: CodeState): void {
       return;
     }
     case "print": {
+      assertArgCount(0);
       state.output.push(state.currentValue);
       state.lineIdx += 1;
       return;
     }
     case "load": {
+      assertArgCount(1);
       state.currentValue = parseValue(args[1]);
       state.lineIdx += 1;
       return;
     }
     case "store": {
+      assertArgCount(1);
       const cellId = parseCellId(args[1]);
       state.cells[cellId] = state.currentValue;
       state.lineIdx += 1;
       return;
     }
     case "add": {
+      assertArgCount(1);
       state.currentValue += parseValue(args[1]);
       state.lineIdx += 1;
       return;
     }
     case "sub": {
+      assertArgCount(1);
       state.currentValue -= parseValue(args[1]);
       state.lineIdx += 1;
       return;
