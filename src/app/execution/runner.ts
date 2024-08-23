@@ -64,7 +64,7 @@ function runCommand(args: string[], state: ExeState): void {
 
   switch (args[0]) {
     case ("jump"): {
-      assertArgCount(0);
+      assertArgCount(1);
       const nextLineIdx = state.lineIdxOfLabels[args[1]];
       if (nextLineIdx == null) {
         throw Error(`could not find label ${args[1]}`);
@@ -96,6 +96,17 @@ function runCommand(args: string[], state: ExeState): void {
       } else {
         state.lineIdx += 1;
       }
+      return;
+    }
+    case "read": {
+      assertArgCount(0);
+      if (state.nextInputIdx < state.input.length) {
+        state.currentValue = state.input[state.nextInputIdx];
+        setLineIdx(state, state.lineIdx + 1);
+      } else {
+        state.previousLineIdx = state.lineIdx;
+      }
+      state.nextInputIdx += 1;
       return;
     }
     case "write": {

@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import ScriptField from "./ScriptField";
 import ExeOutput from "./ExeOutput";
-import { ExeState, initExeState, shouldExeContinue } from "./execution/state";
+import { ExeSettings, ExeState, initExeState, shouldExeContinue } from "./execution/state";
 import { runNextStep, runScript } from "./execution/runner";
 import ScriptVisualizer from "./ScriptVisualizer";
 import ValueVisualizer from "./ValueVisualizer";
@@ -14,9 +14,10 @@ export default function CodeGame() {
   const [isTextMode, setIsTextMode] = useState(false);
   const [exeState, setExeState] = useState<ExeState | null>(null);
 
-  const settings = {
+  const settings: ExeSettings = {
     maxInstructionCount: 10000,
     cellCount: 16,
+    input: [0x59, 0x65, 0x73],
   };
 
   function handleScriptChange(e: FormEvent<HTMLTextAreaElement>) {

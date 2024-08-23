@@ -6,6 +6,7 @@ import { lexScript } from "./lexer";
 export interface ExeSettings {
   maxInstructionCount: number;
   cellCount: number;
+  input: number[];
 }
 
 interface BaseExeState {
@@ -14,6 +15,7 @@ interface BaseExeState {
   instructionCount: number;
   lineIdx: number;
   previousLineIdx: number | null;
+  nextInputIdx: number;
   cells: number[];
   lineIdxOfLabels: { [k: string]: number };
   output: number[];
@@ -28,6 +30,7 @@ export function initExeState(script: string, settings: ExeSettings) {
     ...settings,
     lineIdx: 0,
     previousLineIdx: null,
+    nextInputIdx: 0,
     instructionCount: 0,
     currentValue: 0,
     cells: new Array(settings.cellCount).fill(0),
@@ -47,7 +50,11 @@ export function initExeState(script: string, settings: ExeSettings) {
 }
 
 export function shouldExeContinue(state: ExeState) {
-  return state.lineIdx < state.commands.length && state.error == null;
+  return (
+    state.lineIdx < state.commands.length
+    && state.nextInputIdx <= state.input.length
+    && state.error == null
+  );
 }
 
 export function setLineIdx(state: ExeState, newLineIdx: number) {
