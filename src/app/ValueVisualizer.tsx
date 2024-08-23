@@ -1,7 +1,7 @@
 import { ExeState } from "./execution/state";
 import { toUnicodeChar } from "./utils";
 
-export default function StepByStepValues({ exeState }: StepByStepCodeProps) {
+export default function ValueVisualizer({ exeState }: StepByStepCodeProps) {
   function row(name: string, val: number) {
     return (
       <tr>

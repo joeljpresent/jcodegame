@@ -5,8 +5,8 @@ import ScriptField from "./ScriptField";
 import CodeOutput from "./CodeOutput";
 import { ExeState, initExeState, shouldExeContinue } from "./execution/state";
 import { runNextStep, runScript } from "./execution/runner";
-import StepByStepCode from "./StepByStepCode";
-import StepByStepValues from "./StepByStepValues";
+import CommandVisualizer from "./CommandVisualizer";
+import ValueVisualizer from "./ValueVisualizer";
 
 export default function CodeGame() {
   const [script, setScript] = useState("");
@@ -66,7 +66,7 @@ export default function CodeGame() {
     </div>
     {
       isStepByStep && exeState != null
-        ? <StepByStepCode exeState={exeState} />
+        ? <CommandVisualizer exeState={exeState} />
         : <ScriptField value={script} onChange={handleScriptChange} />
     }
     <div className="flex flex-row justify-between">
@@ -90,6 +90,6 @@ export default function CodeGame() {
       isTextMode={isTextMode}
       onToggleTextMode={handleToggleTextMode}
     />
-    {isStepByStep && exeState != null && <StepByStepValues exeState={exeState} />}
+    {isStepByStep && exeState != null && <ValueVisualizer exeState={exeState} />}
   </div>;
 }

@@ -1,6 +1,6 @@
 import { ExeState } from "./execution/state";
 
-export default function StepByStepCode({ exeState }: Props) {
+export default function CommandVisualizer({ exeState }: Props) {
   function commandLine(args: string[], idx: number) {
     const isCurrentLine = exeState.lineIdx === idx;
     return (
