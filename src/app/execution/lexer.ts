@@ -1,19 +1,19 @@
 "use client";
 
-import { CodeError, isCodeError } from "./error";
+import { ExeError, isExeError } from "./error";
 
 function isWhiteSpace(char: string) {
   return [" ", "\t", "\r"].includes(char);
 }
 
-export function lexScript(script: string): string[][] | CodeError {
+export function lexScript(script: string): string[][] | ExeError {
   try {
     return script.split("\n").map((line, lineIdx) => {
       function err(msg: string) {
         return {
           lineNumber: lineIdx + 1,
           msg: `Lexing error: ${msg}`,
-        } as CodeError;
+        } as ExeError;
       };
 
       let idx = 0;
@@ -61,7 +61,7 @@ export function lexScript(script: string): string[][] | CodeError {
       return tokens;
     });
   } catch (e: unknown) {
-    if (isCodeError(e)) {
+    if (isExeError(e)) {
       return e;
     }
     return {

@@ -2,11 +2,11 @@
 
 import { FormEvent } from "react";
 
-export default function CodeInput({ value, onInput }: Props) {
+export default function ScriptField({ value, onChange }: Props) {
   return (
     <textarea
       value={value}
-      onInput={onInput}
+      onInput={onChange}
       cols={40} rows={10}
       style={{
         color: "black",
@@ -18,5 +18,5 @@ export default function CodeInput({ value, onInput }: Props) {
 
 interface Props {
   value: string,
-  onInput: (e: FormEvent<HTMLTextAreaElement>) => void,
+  onChange: (e: FormEvent<HTMLTextAreaElement>) => void,
 }

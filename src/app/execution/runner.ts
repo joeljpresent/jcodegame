@@ -1,6 +1,6 @@
 "use client";
 
-import { CodeSettings, CodeState, initCodeState, shouldCodeContinue } from "./state";
+import { ExeSettings, ExeState, initExeState, shouldExeContinue } from "./state";
 
 function isInt32(n: number) {
   return (n | 0) === n;
@@ -17,7 +17,7 @@ function parseInt32(s: string) {
   return n | 0;
 }
 
-function runCommand(args: string[], state: CodeState): void {
+function runCommand(args: string[], state: ExeState): void {
   const checkCellIdx = (cellIdx: number): number => {
     if (!isInt32(cellIdx) || cellIdx < 0 || cellIdx >= state.cellCount) {
       throw Error(`invalid cell ID: ${cellIdx}`);
@@ -140,15 +140,15 @@ function runCommand(args: string[], state: CodeState): void {
   }
 }
 
-export function runScript(code: string, settings: CodeSettings) {
-  const state = initCodeState(code, settings);
-  while (shouldCodeContinue(state)) {
+export function runScript(script: string, settings: ExeSettings) {
+  const state = initExeState(script, settings);
+  while (shouldExeContinue(state)) {
     runNextStep(state);
   }
   return state;
 }
 
-export function runNextStep(state: CodeState) {
+export function runNextStep(state: ExeState) {
   try {
     if (state.instructionCount > state.maxInstructionCount) {
       throw Error(`the program must not execute in more than ${state.maxInstructionCount} instructions`);

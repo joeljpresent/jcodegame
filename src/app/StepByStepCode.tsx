@@ -1,8 +1,8 @@
-import { CodeState } from "./execution/state";
+import { ExeState } from "./execution/state";
 
-export default function StepByStepCode({ codeState }: Props) {
+export default function StepByStepCode({ exeState }: Props) {
   function commandLine(args: string[], idx: number) {
-    const isCurrentLine = codeState.lineIdx === idx;
+    const isCurrentLine = exeState.lineIdx === idx;
     return (
       <p style={{
         fontWeight: isCurrentLine ? "bold" : undefined,
@@ -14,10 +14,10 @@ export default function StepByStepCode({ codeState }: Props) {
   }
 
   return <div>
-    {codeState.commands.map((args, idx) => commandLine(args, idx))}
+    {exeState.commands.map((args, idx) => commandLine(args, idx))}
   </div>;
 }
 
 interface Props {
-  codeState: CodeState;
+  exeState: ExeState;
 }

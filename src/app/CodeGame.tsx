@@ -1,32 +1,32 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import CodeInput from "./CodeInput";
+import ScriptField from "./ScriptField";
 import CodeOutput from "./CodeOutput";
-import { CodeState, initCodeState, shouldCodeContinue } from "./execution/state";
+import { ExeState, initExeState, shouldExeContinue } from "./execution/state";
 import { runNextStep, runScript } from "./execution/runner";
 import StepByStepCode from "./StepByStepCode";
 import StepByStepValues from "./StepByStepValues";
 
 export default function CodeGame() {
-  const [code, setCode] = useState("");
+  const [script, setScript] = useState("");
   const [isStepByStep, setIsStepByStep] = useState(false);
   const [isTextMode, setIsTextMode] = useState(false);
-  const [codeState, setCodeState] = useState<CodeState | null>(null);
+  const [exeState, setExeState] = useState<ExeState | null>(null);
 
   const settings = {
     maxInstructionCount: 10000,
     cellCount: 16,
   };
 
-  function handleInput(e: FormEvent<HTMLTextAreaElement>) {
-    setCode(e.currentTarget.value);
-    setCodeState(null);
+  function handleScriptChange(e: FormEvent<HTMLTextAreaElement>) {
+    setScript(e.currentTarget.value);
+    setExeState(null);
   }
 
-  function handleClear() {
-    setCode("");
-    setCodeState(null);
+  function handleScriptClear() {
+    setScript("");
+    setExeState(null);
   }
 
   function handleToggleTextMode() {
@@ -34,29 +34,29 @@ export default function CodeGame() {
   }
 
   function handleRun() {
-    const result = runScript(code, settings);
-    setCodeState(result);
+    const result = runScript(script, settings);
+    setExeState(result);
   }
 
   function handleRunNextStep() {
-    if (codeState == null) {
-      setCodeState(initCodeState(code, settings));
+    if (exeState == null) {
+      setExeState(initExeState(script, settings));
       return;
-    } else if (!shouldCodeContinue(codeState)) {
+    } else if (!shouldExeContinue(exeState)) {
       return;
     }
-    const newCodeState = structuredClone(codeState);
-    runNextStep(newCodeState);
-    setCodeState(newCodeState);
+    const newExeState = structuredClone(exeState);
+    runNextStep(newExeState);
+    setExeState(newExeState);
   }
 
   function handleToggleStepByStep() {
     setIsStepByStep(!isStepByStep);
-    setCodeState(null);
+    setExeState(null);
   }
 
-  function handleResetCodeState() {
-    setCodeState(null);
+  function handleResetExeState() {
+    setExeState(null);
   }
 
   return <div>
@@ -65,18 +65,18 @@ export default function CodeGame() {
       <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
     </div>
     {
-      isStepByStep && codeState != null
-        ? <StepByStepCode codeState={codeState} />
-        : <CodeInput value={code} onInput={handleInput} />
+      isStepByStep && exeState != null
+        ? <StepByStepCode exeState={exeState} />
+        : <ScriptField value={script} onChange={handleScriptChange} />
     }
     <div className="flex flex-row justify-between">
-      <button onClick={handleClear}>✕ Clear</button>
+      <button onClick={handleScriptClear}>✕ Clear</button>
       {
         isStepByStep
           ? <>
-            <button onClick={handleResetCodeState}>⏹ Reset</button>
+            <button onClick={handleResetExeState}>⏹ Reset</button>
             {
-              codeState == null || shouldCodeContinue(codeState)
+              exeState == null || shouldExeContinue(exeState)
                 ? <button onClick={handleRunNextStep}>⏭ Next step</button>
                 : <button disabled>End</button>
             }
@@ -85,11 +85,11 @@ export default function CodeGame() {
       }
     </div>
     <CodeOutput
-      output={codeState?.output ?? []}
-      error={codeState?.error ?? null}
+      output={exeState?.output ?? []}
+      error={exeState?.error ?? null}
       isTextMode={isTextMode}
       onToggleTextMode={handleToggleTextMode}
     />
-    {isStepByStep && codeState != null && <StepByStepValues codeState={codeState} />}
+    {isStepByStep && exeState != null && <StepByStepValues exeState={exeState} />}
   </div>;
 }

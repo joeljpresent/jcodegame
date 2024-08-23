@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
-import { CodeError } from "./execution/error";
+import { ExeError } from "./execution/error";
 import { toUnicode } from "./utils";
 
 export default function CodeOutput({ output, error, isTextMode, onToggleTextMode }: Props) {
@@ -43,7 +43,7 @@ export default function CodeOutput({ output, error, isTextMode, onToggleTextMode
 
 interface Props {
   output: number[],
-  error: CodeError | null,
+  error: ExeError | null,
   isTextMode: boolean,
   onToggleTextMode: (e: FormEvent<HTMLButtonElement>) => void,
 }

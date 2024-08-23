@@ -1,14 +1,14 @@
 "use client";
 
-import { CodeError, isCodeError } from "./error";
+import { ExeError, isExeError } from "./error";
 import { lexScript } from "./lexer";
 
-export interface CodeSettings {
+export interface ExeSettings {
   maxInstructionCount: number;
   cellCount: number;
 }
 
-interface BaseCodeState {
+interface BaseExeState {
   commands: string[][];
   currentValue: number;
   instructionCount: number;
@@ -16,23 +16,23 @@ interface BaseCodeState {
   cells: number[];
   lineIdxOfLabels: { [k: string]: number };
   output: number[];
-  error: null | CodeError;
+  error: null | ExeError;
 };
 
-export type CodeState = CodeSettings & BaseCodeState;
+export type ExeState = ExeSettings & BaseExeState;
 
-export function initCodeState(code: string, settings: CodeSettings) {
-  const lexing = lexScript(code);
-  const state: CodeState = {
+export function initExeState(script: string, settings: ExeSettings) {
+  const lexing = lexScript(script);
+  const state: ExeState = {
     ...settings,
     lineIdx: 0,
     instructionCount: 0,
     currentValue: 0,
     cells: new Array(settings.cellCount).fill(0),
-    commands: isCodeError(lexing) ? [] : lexing,
+    commands: isExeError(lexing) ? [] : lexing,
     lineIdxOfLabels: {},
     output: [],
-    error: isCodeError(lexing) ? lexing : null,
+    error: isExeError(lexing) ? lexing : null,
   };
 
   for (const [idx, args] of state.commands.entries()) {
@@ -44,6 +44,6 @@ export function initCodeState(code: string, settings: CodeSettings) {
   return state;
 }
 
-export function shouldCodeContinue(state: CodeState) {
+export function shouldExeContinue(state: ExeState) {
   return state.lineIdx < state.commands.length && state.error == null;
 }
