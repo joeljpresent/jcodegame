@@ -1,5 +1,5 @@
 import { ExeState } from "./exe/state";
-import { toUnicodeChar } from "./utils";
+import { toUnicodeChar } from "./utils/unicode";
 
 export default function ValueVisualizer({ exeState }: StepByStepCodeProps) {
   function row(name: string, val: number) {

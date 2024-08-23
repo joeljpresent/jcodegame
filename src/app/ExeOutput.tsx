@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ExeError } from "./exe/error";
 import TextModeToggle from "./TextModeToggle";
-import { toUnicode } from "./utils";
+import { toUnicode } from "./utils/unicode";
 
 export default function ExeOutput({ output, error }: Props) {
   const [isTextMode, setIsTextMode] = useState(false);

@@ -1,21 +1,7 @@
 "use client";
 
+import { isInt32, parseInt32 } from "../utils/int32";
 import { ExeSettings, ExeState, initExeState, setLineIdx, shouldExeContinue } from "./state";
-
-function isInt32(n: number) {
-  return (n | 0) === n;
-}
-
-function parseInt32(s: string) {
-  if (!/^-?(\d+|0x[0-9a-f]+)$/i.test(s)) {
-    throw Error(`could not parse int32: ${s}`);
-  }
-  const n = Number.parseInt(s);
-  if (!isInt32(n)) {
-    throw Error(`invalid int32: ${n}`);
-  }
-  return n | 0;
-}
 
 function runCommand(args: string[], state: ExeState): void {
   const checkCellIdx = (cellIdx: number): number => {

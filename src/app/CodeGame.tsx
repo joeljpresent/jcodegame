@@ -8,25 +8,31 @@ import { runNextStep, runScript } from "./exe/runner";
 import ScriptVisualizer from "./ScriptVisualizer";
 import ValueVisualizer from "./ValueVisualizer";
 import ExeInputVisualizer from "./ExeInputVisualizer";
+import ExeInputField from "./ExeInputField";
+import { createInputSuccess, ExeInput } from "./exe/input";
 
 export default function CodeGame() {
   const [script, setScript] = useState("");
-  const [exeInput, setExeInput] = useState<number[]>([]);
+  const [exeInput, setExeInput] = useState(createInputSuccess([]));
   const [isStepByStep, setIsStepByStep] = useState(false);
   const [exeState, setExeState] = useState<ExeState | null>(null);
 
-  function createSettings(): ExeSettings {
+  function createSettings(): ExeSettings | null {
+    if (exeInput.status === "error") {
+      return null;
+    }
     return {
       maxInstructionCount: 10000,
       cellCount: 16,
-      input: exeInput,
+      input: exeInput.value,
     };
   }
 
+  function handleExeInputChange(newInput: ExeInput) {
+    setExeInput(newInput);
+  }
+
   function handleScriptChange(e: FormEvent<HTMLTextAreaElement>) {
-    // <TODO: create input field for exe input>
-    setExeInput([0x45, 0x71, 0x38, 0x54, 0x66]);
-    // </TODO>
     setScript(e.currentTarget.value);
     setExeState(null);
   }
@@ -37,13 +43,20 @@ export default function CodeGame() {
   }
 
   function handleRun() {
-    const result = runScript(script, createSettings());
+    const settings = createSettings();
+    if (settings == null) {
+      return;
+    }
+    const result = runScript(script, settings);
     setExeState(result);
   }
 
   function handleRunNextStep() {
     if (exeState == null) {
-      setExeState(initExeState(script, createSettings()));
+      const settings = createSettings();
+      if (settings != null) {
+        setExeState(initExeState(script, settings));
+      }
       return;
     } else if (!shouldExeContinue(exeState)) {
       return;
@@ -67,10 +80,18 @@ export default function CodeGame() {
       <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
       <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
     </div>
-    <ExeInputVisualizer
-      input={exeInput}
-      nextInputIdx={exeState?.nextInputIdx ?? 0}
-    />
+    {
+      isStepByStep && exeState != null && exeInput.status === "success"
+        ? <ExeInputVisualizer
+          input={exeInput.value}
+          nextInputIdx={exeState?.nextInputIdx ?? 0}
+        />
+        : <ExeInputField
+          input={exeInput}
+          onChange={handleExeInputChange}
+        />
+    }
+
     {
       isStepByStep && exeState != null
         ? <ScriptVisualizer exeState={exeState} />
