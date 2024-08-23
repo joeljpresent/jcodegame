@@ -1,10 +1,9 @@
 "use client";
 
-import { FormEvent } from "react";
-import { ExeError } from "./execution/error";
+import { ExeError } from "./exe/error";
 import { toUnicode } from "./utils";
 
-export default function ExeOutput({ output, error, isTextMode, onToggleTextMode }: Props) {
+export default function ExeOutput({ output, error, isTextMode }: Props) {
   function outputDisplay() {
     if (output.length === 0) {
       return <p><i>Empty output.</i></p>
@@ -25,25 +24,16 @@ export default function ExeOutput({ output, error, isTextMode, onToggleTextMode 
     )
   }
 
-  return <>
-    <div className="flex flex-row justify-between">
-      <label htmlFor="toggleTextModeButton">
-        {isTextMode ? "Text mode" : "Numeric mode"}
-      </label>
-      <button name="toggleTextModeButton" onClick={onToggleTextMode}>
-        {isTextMode ? "To numeric" : "To text"}
-      </button>
-    </div>
+  return (
     <div>
       {outputDisplay()}
       {errorDisplay()}
     </div>
-  </>;
+  );
 }
 
 interface Props {
   output: number[],
   error: ExeError | null,
   isTextMode: boolean,
-  onToggleTextMode: (e: FormEvent<HTMLButtonElement>) => void,
 }

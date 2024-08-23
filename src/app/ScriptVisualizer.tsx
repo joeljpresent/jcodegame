@@ -1,4 +1,4 @@
-import { ExeState } from "./execution/state";
+import { ExeState } from "./exe/state";
 
 export default function ScriptVisualizer({ exeState }: Props) {
   function getLineStyle(idx: number) {

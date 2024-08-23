@@ -3,10 +3,11 @@
 import { FormEvent, useState } from "react";
 import ScriptField from "./ScriptField";
 import ExeOutput from "./ExeOutput";
-import { ExeSettings, ExeState, initExeState, shouldExeContinue } from "./execution/state";
-import { runNextStep, runScript } from "./execution/runner";
+import { ExeSettings, ExeState, initExeState, shouldExeContinue } from "./exe/state";
+import { runNextStep, runScript } from "./exe/runner";
 import ScriptVisualizer from "./ScriptVisualizer";
 import ValueVisualizer from "./ValueVisualizer";
+import TextModeToggle from "./TextModeToggle";
 
 export default function CodeGame() {
   const [script, setScript] = useState("");
@@ -14,10 +15,10 @@ export default function CodeGame() {
   const [isTextMode, setIsTextMode] = useState(false);
   const [exeState, setExeState] = useState<ExeState | null>(null);
 
-  const settings: ExeSettings = {
+  const DEFAULT_SETTINGS: ExeSettings = {
     maxInstructionCount: 10000,
     cellCount: 16,
-    input: [0x59, 0x65, 0x73],
+    input: [],
   };
 
   function handleScriptChange(e: FormEvent<HTMLTextAreaElement>) {
@@ -35,13 +36,13 @@ export default function CodeGame() {
   }
 
   function handleRun() {
-    const result = runScript(script, settings);
+    const result = runScript(script, DEFAULT_SETTINGS);
     setExeState(result);
   }
 
   function handleRunNextStep() {
     if (exeState == null) {
-      setExeState(initExeState(script, settings));
+      setExeState(initExeState(script, DEFAULT_SETTINGS));
       return;
     } else if (!shouldExeContinue(exeState)) {
       return;
@@ -65,6 +66,10 @@ export default function CodeGame() {
       <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
       <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
     </div>
+    <TextModeToggle
+      isTextMode={isTextMode}
+      onToggleTextMode={handleToggleTextMode}
+    />
     {
       isStepByStep && exeState != null
         ? <ScriptVisualizer exeState={exeState} />
@@ -89,7 +94,6 @@ export default function CodeGame() {
       output={exeState?.output ?? []}
       error={exeState?.error ?? null}
       isTextMode={isTextMode}
-      onToggleTextMode={handleToggleTextMode}
     />
     {isStepByStep && exeState != null && <ValueVisualizer exeState={exeState} />}
   </div>;

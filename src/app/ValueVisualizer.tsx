@@ -1,4 +1,4 @@
-import { ExeState } from "./execution/state";
+import { ExeState } from "./exe/state";
 import { toUnicodeChar } from "./utils";
 
 export default function ValueVisualizer({ exeState }: StepByStepCodeProps) {
