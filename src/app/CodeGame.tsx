@@ -7,12 +7,10 @@ import { ExeSettings, ExeState, initExeState, shouldExeContinue } from "./exe/st
 import { runNextStep, runScript } from "./exe/runner";
 import ScriptVisualizer from "./ScriptVisualizer";
 import ValueVisualizer from "./ValueVisualizer";
-import TextModeToggle from "./TextModeToggle";
 
 export default function CodeGame() {
   const [script, setScript] = useState("");
   const [isStepByStep, setIsStepByStep] = useState(false);
-  const [isTextMode, setIsTextMode] = useState(false);
   const [exeState, setExeState] = useState<ExeState | null>(null);
 
   const DEFAULT_SETTINGS: ExeSettings = {
@@ -29,10 +27,6 @@ export default function CodeGame() {
   function handleScriptClear() {
     setScript("");
     setExeState(null);
-  }
-
-  function handleToggleTextMode() {
-    setIsTextMode(!isTextMode);
   }
 
   function handleRun() {
@@ -66,10 +60,6 @@ export default function CodeGame() {
       <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
       <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
     </div>
-    <TextModeToggle
-      isTextMode={isTextMode}
-      onToggleTextMode={handleToggleTextMode}
-    />
     {
       isStepByStep && exeState != null
         ? <ScriptVisualizer exeState={exeState} />
@@ -93,7 +83,6 @@ export default function CodeGame() {
     <ExeOutput
       output={exeState?.output ?? []}
       error={exeState?.error ?? null}
-      isTextMode={isTextMode}
     />
     {isStepByStep && exeState != null && <ValueVisualizer exeState={exeState} />}
   </div>;
