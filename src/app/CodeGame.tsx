@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import ScriptField from "./ScriptField";
-import CodeOutput from "./CodeOutput";
+import ExeOutput from "./ExeOutput";
 import { ExeState, initExeState, shouldExeContinue } from "./execution/state";
 import { runNextStep, runScript } from "./execution/runner";
 import ScriptVisualizer from "./ScriptVisualizer";
@@ -84,7 +84,7 @@ export default function CodeGame() {
           : <button onClick={handleRun}>▶ Run</button>
       }
     </div>
-    <CodeOutput
+    <ExeOutput
       output={exeState?.output ?? []}
       error={exeState?.error ?? null}
       isTextMode={isTextMode}

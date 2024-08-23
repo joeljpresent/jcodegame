@@ -4,7 +4,7 @@ import { FormEvent } from "react";
 import { ExeError } from "./execution/error";
 import { toUnicode } from "./utils";
 
-export default function CodeOutput({ output, error, isTextMode, onToggleTextMode }: Props) {
+export default function ExeOutput({ output, error, isTextMode, onToggleTextMode }: Props) {
   function outputDisplay() {
     if (output.length === 0) {
       return <p><i>Empty output.</i></p>
