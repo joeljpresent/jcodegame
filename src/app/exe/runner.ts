@@ -1,6 +1,7 @@
 "use client";
 
 import { isInt32, parseInt32 } from "../utils/int32";
+import { parseCharLiteral } from "../utils/unicode";
 import { ExeSettings, ExeState, initExeState, setLineIdx, shouldExeContinue } from "./state";
 
 function runCommand(args: string[], state: ExeState): void {
@@ -18,19 +19,8 @@ function runCommand(args: string[], state: ExeState): void {
       return getCell(parseInt32(val.slice(1)));
     } else if (val.charAt(0) === "*") {
       return getCell(getCell(parseInt32(val.slice(1))));
-    } else if (/^'[^\x00-\x1f'\\]'$/u.test(val)) {
-      return val.codePointAt(1)!;
-    } else if (/^'\\[\\'bfnrt]'$/u.test(val)) {
-      const ESCAPE: { [k: string]: number } = {
-        "\\": "\\".charCodeAt(0),
-        "'": "'".charCodeAt(0),
-        b: "\b".charCodeAt(0),
-        f: "\f".charCodeAt(0),
-        n: "\n".charCodeAt(0),
-        r: "\r".charCodeAt(0),
-        t: "\t".charCodeAt(0),
-      };
-      return ESCAPE[val.charAt(2)!];
+    } else if (val.charAt(0) === "'") {
+      return parseCharLiteral(val);
     }
     return parseInt32(val);
   };
@@ -73,14 +63,14 @@ function runCommand(args: string[], state: ExeState): void {
         ge: (a, b) => a >= b,
       }
       if (!Object.hasOwn(CMPS, args[1])) {
-        throw Error(`invalid comparision operator: ${args[1]}`);
+        throw Error(`invalid comparison operator: ${args[1]}`);
       }
       const cmp = CMPS[args[1]];
       const value = parseValue(args[2]);
       if (cmp(state.currentValue, value)) {
         setLineIdx(state, nextLineIdx);
       } else {
-        state.lineIdx += 1;
+        setLineIdx(state, state.lineIdx + 1);
       }
       return;
     }

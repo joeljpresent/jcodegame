@@ -1,8 +1,8 @@
-export function isInt32(n: number) {
+export function isInt32(n: number): boolean {
   return (n | 0) === n;
 }
 
-export function parseInt32(s: string) {
+export function parseInt32(s: string): number {
   if (!/^-?(\d+|0x[0-9a-f]+)$/i.test(s)) {
     throw Error(`could not parse int32: ${s}`);
   }
