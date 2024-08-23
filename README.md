@@ -4,7 +4,8 @@
 
 ### Commands
 
-- print
+- read
+- write
 - load VALUE
 - store CELL
 - add VALUE
@@ -15,6 +16,6 @@
 
 ### Values
 
-- 0: the number zero
-- @0: the cell of index 0
-- &0: the cell whose index is the value of the cell of index 0
+- `0`: the number zero
+- `@0`: the cell of index 0
+- `*0`: the cell whose index is the value of the cell of index 0

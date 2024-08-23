@@ -21,7 +21,7 @@ export function lexScript(script: string): string[][] | CodeError {
       while (idx < line.length) {
         if (isWhiteSpace(line[idx])) {
           idx += 1;
-        } else if (/^[\w@&-]$/.test(line[idx])) {
+        } else if (/^[\w@*-]$/.test(line[idx])) {
           let token = line[idx];
           idx += 1;
           while (/^\w$/.test(line[idx])) {

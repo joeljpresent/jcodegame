@@ -30,7 +30,7 @@ function runCommand(args: string[], state: CodeState): void {
   const parseValue = (val: string): number => {
     if (val.charAt(0) === "@") {
       return getCell(parseInt32(val.slice(1)));
-    } else if (val.charAt(0) === "&") {
+    } else if (val.charAt(0) === "*") {
       return getCell(getCell(parseInt32(val.slice(1))));
     } else if (/^'[^\x00-\x1f'\\]'$/u.test(val)) {
       return val.codePointAt(1)!;
@@ -51,10 +51,10 @@ function runCommand(args: string[], state: CodeState): void {
   const parseCellId = (val: string): number => {
     if (val.charAt(0) === "@") {
       return checkCellIdx(parseInt32(val.slice(1)));
-    } else if (val.charAt(0) === "&") {
+    } else if (val.charAt(0) === "*") {
       return checkCellIdx(getCell(parseInt32(val.slice(1))));
     }
-    throw Error("cell ID must start with @ or &");
+    throw Error("cell ID must start with @ or *");
   };
   const assertArgCount = (count: number) => {
     if (args.length - 1 !== count) {
@@ -98,7 +98,7 @@ function runCommand(args: string[], state: CodeState): void {
       }
       return;
     }
-    case "print": {
+    case "write": {
       assertArgCount(0);
       state.output.push(state.currentValue);
       state.lineIdx += 1;
