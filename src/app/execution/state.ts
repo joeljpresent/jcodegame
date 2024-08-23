@@ -13,6 +13,7 @@ interface BaseExeState {
   currentValue: number;
   instructionCount: number;
   lineIdx: number;
+  previousLineIdx: number | null;
   cells: number[];
   lineIdxOfLabels: { [k: string]: number };
   output: number[];
@@ -26,6 +27,7 @@ export function initExeState(script: string, settings: ExeSettings) {
   const state: ExeState = {
     ...settings,
     lineIdx: 0,
+    previousLineIdx: null,
     instructionCount: 0,
     currentValue: 0,
     cells: new Array(settings.cellCount).fill(0),
@@ -46,4 +48,9 @@ export function initExeState(script: string, settings: ExeSettings) {
 
 export function shouldExeContinue(state: ExeState) {
   return state.lineIdx < state.commands.length && state.error == null;
+}
+
+export function setLineIdx(state: ExeState, newLineIdx: number) {
+  state.previousLineIdx = state.lineIdx;
+  state.lineIdx = newLineIdx;
 }

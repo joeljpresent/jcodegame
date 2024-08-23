@@ -1,6 +1,6 @@
 "use client";
 
-import { ExeSettings, ExeState, initExeState, shouldExeContinue } from "./state";
+import { ExeSettings, ExeState, initExeState, setLineIdx, shouldExeContinue } from "./state";
 
 function isInt32(n: number) {
   return (n | 0) === n;
@@ -69,7 +69,7 @@ function runCommand(args: string[], state: ExeState): void {
       if (nextLineIdx == null) {
         throw Error(`could not find label ${args[1]}`);
       }
-      state.lineIdx = nextLineIdx;
+      setLineIdx(state, nextLineIdx);
       return;
     }
     case ("jumpif"): {
@@ -92,7 +92,7 @@ function runCommand(args: string[], state: ExeState): void {
       const cmp = CMPS[args[1]];
       const value = parseValue(args[2]);
       if (cmp(state.currentValue, value)) {
-        state.lineIdx = nextLineIdx;
+        setLineIdx(state, nextLineIdx);
       } else {
         state.lineIdx += 1;
       }
@@ -101,37 +101,37 @@ function runCommand(args: string[], state: ExeState): void {
     case "write": {
       assertArgCount(0);
       state.output.push(state.currentValue);
-      state.lineIdx += 1;
+      setLineIdx(state, state.lineIdx + 1);
       return;
     }
     case "load": {
       assertArgCount(1);
       state.currentValue = parseValue(args[1]);
-      state.lineIdx += 1;
+      setLineIdx(state, state.lineIdx + 1);
       return;
     }
     case "store": {
       assertArgCount(1);
       const cellId = parseCellId(args[1]);
       state.cells[cellId] = state.currentValue;
-      state.lineIdx += 1;
+      setLineIdx(state, state.lineIdx + 1);
       return;
     }
     case "add": {
       assertArgCount(1);
       state.currentValue += parseValue(args[1]);
-      state.lineIdx += 1;
+      setLineIdx(state, state.lineIdx + 1);
       return;
     }
     case "sub": {
       assertArgCount(1);
       state.currentValue -= parseValue(args[1]);
-      state.lineIdx += 1;
+      setLineIdx(state, state.lineIdx + 1);
       return;
     }
     case "label":
     case undefined: {
-      state.lineIdx += 1;
+      setLineIdx(state, state.lineIdx + 1);
       return;
     }
     default: {
