@@ -30,22 +30,22 @@ export default function ExeInputDisplay({ input, nextInputIdx, isTextMode }: Pro
 
   if (isTextMode) {
     return (
-      <p><pre>
+      <pre>
         {
           input.map((v, idx) => (
-            <span style={getValueStyle(idx)}>
+            <span style={getValueStyle(idx)} key={idx}>
               {toUnicodeChar(v)}
             </span>
           ))
         }
         {endDisplay()}
-      </pre></p>
+      </pre>
     );
   }
   return <p>
     {
       input.map((v, idx) => (
-        <span style={getValueStyle(idx)}>{v}, </span>
+        <span style={getValueStyle(idx)} key={idx}>{v}, </span>
       ))
     }
     {endDisplay()}

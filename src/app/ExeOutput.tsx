@@ -16,7 +16,7 @@ export default function ExeOutput({ output, error }: Props) {
     if (output.length === 0) {
       return <p><i>Empty output.</i></p>
     } else if (isTextMode) {
-      return <p><pre>{toUnicode(output)}</pre></p>
+      return <pre>{toUnicode(output)}</pre>
     }
     return <p>{output.join(", ")}</p>
   }

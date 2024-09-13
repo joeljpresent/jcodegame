@@ -4,7 +4,7 @@ import { toUnicodeChar } from "./utils/unicode";
 export default function ValueVisualizer({ exeState }: StepByStepCodeProps) {
   function row(name: string, val: number) {
     return (
-      <tr>
+      <tr key={name}>
         <td style={{ paddingRight: "1em" }}>{name}</td>
         <td style={{ paddingRight: "1em" }}>{val}</td>
         <td>{toUnicodeChar(val)}</td>
@@ -14,8 +14,10 @@ export default function ValueVisualizer({ exeState }: StepByStepCodeProps) {
 
   return (
     <table>
-      {row("cur", exeState.currentValue)}
-      {exeState.cells.map((val, idx) => row(`@${idx}`, val))}
+      <tbody>
+        {row("cur", exeState.currentValue)}
+        {exeState.cells.map((val, idx) => row(`@${idx}`, val))}
+      </tbody>
     </table>
   );
 }

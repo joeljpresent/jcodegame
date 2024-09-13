@@ -16,7 +16,7 @@ export default function ScriptVisualizer({ exeState }: Props) {
 
   function commandLine(args: string[], idx: number) {
     return (
-      <p style={getLineStyle(idx)}>
+      <p style={getLineStyle(idx)} key={idx}>
         [{idx + 1}] {args.join(" ")}
       </p>
     );
