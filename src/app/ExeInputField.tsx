@@ -1,31 +1,21 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import TextModeToggle from "./TextModeToggle";
+import { FormEvent } from "react";
 import { ExeInput, parseInputField } from "./exe/input";
 import ExeInputDisplay from "./ExeInputDisplay";
 
-export default function ExeInputField({ input, onChange }: Props) {
-  const [text, setText] = useState("");
-  const [isTextMode, setIsTextMode] = useState(false);
-
-  function handleToggleTextMode() {
-    setIsTextMode(!isTextMode);
-    const newInput = parseInputField(text, !isTextMode);
-    onChange(newInput);
-  }
+export default function ExeInputField({ input, onChange, isTextMode }: Props) {
 
   function handleTextChange(e: FormEvent<HTMLTextAreaElement>) {
     const newText = e.currentTarget.value;
-    setText(newText);
-    const newInput = parseInputField(newText, isTextMode);
-    onChange(newInput);
+    const nextInput = parseInputField(newText, isTextMode);
+    onChange(nextInput);
   }
 
   return <>
     <div>
       <textarea
-        value={text}
+        value={input.text}
         onInput={handleTextChange}
         cols={40} rows={5}
         style={{
@@ -33,7 +23,6 @@ export default function ExeInputField({ input, onChange }: Props) {
           fontFamily: "monospace",
         }}
       />
-      <TextModeToggle isTextMode={isTextMode} onToggleTextMode={handleToggleTextMode} />
     </div>
     <div>
       {
@@ -52,4 +41,5 @@ export default function ExeInputField({ input, onChange }: Props) {
 interface Props {
   input: ExeInput;
   onChange: (input: ExeInput) => void,
+  isTextMode: boolean,
 }

@@ -7,14 +7,16 @@ import { ExeSettings, ExeState, initExeState, shouldExeContinue } from "./exe/st
 import { runNextStep, runScript } from "./exe/runner";
 import ScriptVisualizer from "./ScriptVisualizer";
 import ValueVisualizer from "./ValueVisualizer";
-import ExeInputVisualizer from "./ExeInputVisualizer";
 import ExeInputField from "./ExeInputField";
-import { createInputSuccess, ExeInput } from "./exe/input";
+import { createInputSuccess, ExeInput, parseInputField } from "./exe/input";
+import ExeInputDisplay from "./ExeInputDisplay";
+import TextModeToggle from "./TextModeToggle";
 
 export default function CodeGame() {
   const [script, setScript] = useState("");
-  const [exeInput, setExeInput] = useState(createInputSuccess([]));
+  const [exeInput, setExeInput] = useState(createInputSuccess("", []));
   const [isStepByStep, setIsStepByStep] = useState(false);
+  const [isTextMode, setIsTextMode] = useState(false);
   const [exeState, setExeState] = useState<ExeState | null>(null);
 
   function createSettings(): ExeSettings | null {
@@ -28,8 +30,14 @@ export default function CodeGame() {
     };
   }
 
-  function handleExeInputChange(newInput: ExeInput) {
-    setExeInput(newInput);
+  function handleToggleTextMode() {
+    setIsTextMode(!isTextMode);
+    const nextInput = parseInputField(exeInput.text, !isTextMode);
+    setExeInput(nextInput);
+  }
+
+  function handleExeInputChange(nextInput: ExeInput) {
+    setExeInput(nextInput);
   }
 
   function handleScriptChange(e: FormEvent<HTMLTextAreaElement>) {
@@ -80,14 +88,20 @@ export default function CodeGame() {
       <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
       <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
     </div>
+    <TextModeToggle
+      isTextMode={isTextMode}
+      onToggleTextMode={handleToggleTextMode}
+    />
     {
       isStepByStep && exeState != null && exeInput.status === "success"
-        ? <ExeInputVisualizer
+        ? <ExeInputDisplay
           input={exeInput.value}
           nextInputIdx={exeState?.nextInputIdx ?? 0}
+          isTextMode={isTextMode}
         />
         : <ExeInputField
           input={exeInput}
+          isTextMode={isTextMode}
           onChange={handleExeInputChange}
         />
     }
@@ -115,6 +129,7 @@ export default function CodeGame() {
     <ExeOutput
       output={exeState?.output ?? []}
       error={exeState?.error ?? null}
+      isTextMode={isTextMode}
     />
     {isStepByStep && exeState != null && <ValueVisualizer exeState={exeState} />}
   </div>;

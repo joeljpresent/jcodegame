@@ -1,17 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { ExeError } from "./exe/error";
-import TextModeToggle from "./TextModeToggle";
 import { toUnicode } from "./utils/unicode";
 
-export default function ExeOutput({ output, error }: Props) {
-  const [isTextMode, setIsTextMode] = useState(false);
-
-  function handleToggleTextMode() {
-    setIsTextMode(!isTextMode);
-  }
-
+export default function ExeOutput({ output, error, isTextMode }: Props) {
   function outputDisplay() {
     if (output.length === 0) {
       return <p><i>Empty output.</i></p>
@@ -34,7 +26,6 @@ export default function ExeOutput({ output, error }: Props) {
 
   return <>
     <h2>Output</h2>
-    <TextModeToggle isTextMode={isTextMode} onToggleTextMode={handleToggleTextMode} />
     <div>
       {outputDisplay()}
       {errorDisplay()}
@@ -45,4 +36,5 @@ export default function ExeOutput({ output, error }: Props) {
 interface Props {
   output: number[],
   error: ExeError | null,
+  isTextMode: boolean,
 }
