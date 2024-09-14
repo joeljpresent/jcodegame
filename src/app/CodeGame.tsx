@@ -90,62 +90,68 @@ export default function CodeGame() {
     setExeState(null);
   }
 
-  return <div>
-    <div>
-      <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
-      <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
-    </div>
-    <h2>Input</h2>
-    {
-      isStepByStep && exeState != null && exeInput.status === "success"
-        ? <ExeInputVisualizer
-          input={exeInput.value}
-          nextInputIdx={exeState?.nextInputIdx ?? 0}
-          isTextMode={isExeInputTextMode}
+  return (
+    <div className="flex flex-row">
+      <div>
+        <div>
+          <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
+          <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
+        </div>
+        <h2>Input</h2>
+        {
+          isStepByStep && exeState != null && exeInput.status === "success"
+            ? <ExeInputVisualizer
+              input={exeInput.value}
+              nextInputIdx={exeState?.nextInputIdx ?? 0}
+              isTextMode={isExeInputTextMode}
+            />
+            : <>
+              <TextModeToggle
+                isTextMode={isExeInputTextMode}
+                onToggleTextMode={handleToggleExeInputTextMode}
+              />
+              <ExeInputField
+                input={exeInput}
+                isTextMode={isExeInputTextMode}
+                onChange={handleExeInputChange}
+              />
+            </>
+        }
+        <h2>Script</h2>
+        {
+          isStepByStep && exeState != null
+            ? <ScriptVisualizer exeState={exeState} />
+            : <ScriptField value={script} onChange={handleScriptChange} />
+        }
+        <div className="flex flex-row justify-between">
+          <button onClick={handleScriptClear}>✕ Clear</button>
+          {
+            isStepByStep
+              ? <>
+                <button onClick={handleResetExeState}>⏹ Reset</button>
+                {
+                  exeState == null || shouldExeContinue(exeState)
+                    ? <button onClick={handleRunNextStep}>⏭ Next step</button>
+                    : <button disabled>End</button>
+                }
+              </>
+              : <button onClick={handleRun}>▶ Run</button>
+          }
+        </div>
+      </div>
+      <div>
+        <h2>Output</h2>
+        <TextModeToggle
+          isTextMode={isExeOutputTextMode}
+          onToggleTextMode={handleToggleExeOutputTextMode}
         />
-        : <>
-          <TextModeToggle
-            isTextMode={isExeInputTextMode}
-            onToggleTextMode={handleToggleExeInputTextMode}
-          />
-          <ExeInputField
-            input={exeInput}
-            isTextMode={isExeInputTextMode}
-            onChange={handleExeInputChange}
-          />
-        </>
-    }
-    <h2>Script</h2>
-    {
-      isStepByStep && exeState != null
-        ? <ScriptVisualizer exeState={exeState} />
-        : <ScriptField value={script} onChange={handleScriptChange} />
-    }
-    <div className="flex flex-row justify-between">
-      <button onClick={handleScriptClear}>✕ Clear</button>
-      {
-        isStepByStep
-          ? <>
-            <button onClick={handleResetExeState}>⏹ Reset</button>
-            {
-              exeState == null || shouldExeContinue(exeState)
-                ? <button onClick={handleRunNextStep}>⏭ Next step</button>
-                : <button disabled>End</button>
-            }
-          </>
-          : <button onClick={handleRun}>▶ Run</button>
-      }
+        <ExeOutput
+          output={exeState?.output ?? []}
+          error={exeState?.error ?? null}
+          isTextMode={isExeOutputTextMode}
+        />
+        {isStepByStep && exeState != null && <ValueVisualizer exeState={exeState} />}
+      </div>
     </div>
-    <h2>Output</h2>
-    <TextModeToggle
-      isTextMode={isExeOutputTextMode}
-      onToggleTextMode={handleToggleExeOutputTextMode}
-    />
-    <ExeOutput
-      output={exeState?.output ?? []}
-      error={exeState?.error ?? null}
-      isTextMode={isExeOutputTextMode}
-    />
-    {isStepByStep && exeState != null && <ValueVisualizer exeState={exeState} />}
-  </div>;
+  );
 }
