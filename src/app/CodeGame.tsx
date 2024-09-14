@@ -16,7 +16,8 @@ export default function CodeGame() {
   const [script, setScript] = useState("");
   const [exeInput, setExeInput] = useState(createInputSuccess("", []));
   const [isStepByStep, setIsStepByStep] = useState(false);
-  const [isTextMode, setIsTextMode] = useState(false);
+  const [isExeInputTextMode, setIsExeInputTextMode] = useState(false);
+  const [isExeOutputTextMode, setIsExeOutputTextMode] = useState(false);
   const [exeState, setExeState] = useState<ExeState | null>(null);
 
   function createSettings(): ExeSettings | null {
@@ -30,10 +31,16 @@ export default function CodeGame() {
     };
   }
 
-  function handleToggleTextMode() {
-    setIsTextMode(!isTextMode);
-    const nextInput = parseInputField(exeInput.text, !isTextMode);
+  function handleToggleExeInputTextMode() {
+    const nextIsTextMode = !isExeInputTextMode;
+    setIsExeInputTextMode(nextIsTextMode);
+    const nextInput = parseInputField(exeInput.text, nextIsTextMode);
     setExeInput(nextInput);
+    setExeState(null);
+  }
+
+  function handleToggleExeOutputTextMode() {
+    setIsExeOutputTextMode(!isExeOutputTextMode);
   }
 
   function handleExeInputChange(nextInput: ExeInput) {
@@ -89,19 +96,19 @@ export default function CodeGame() {
       <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
     </div>
     <TextModeToggle
-      isTextMode={isTextMode}
-      onToggleTextMode={handleToggleTextMode}
+      isTextMode={isExeInputTextMode}
+      onToggleTextMode={handleToggleExeInputTextMode}
     />
     {
       isStepByStep && exeState != null && exeInput.status === "success"
         ? <ExeInputDisplay
           input={exeInput.value}
           nextInputIdx={exeState?.nextInputIdx ?? 0}
-          isTextMode={isTextMode}
+          isTextMode={isExeInputTextMode}
         />
         : <ExeInputField
           input={exeInput}
-          isTextMode={isTextMode}
+          isTextMode={isExeInputTextMode}
           onChange={handleExeInputChange}
         />
     }
@@ -126,10 +133,14 @@ export default function CodeGame() {
           : <button onClick={handleRun}>▶ Run</button>
       }
     </div>
+    <TextModeToggle
+      isTextMode={isExeOutputTextMode}
+      onToggleTextMode={handleToggleExeOutputTextMode}
+    />
     <ExeOutput
       output={exeState?.output ?? []}
       error={exeState?.error ?? null}
-      isTextMode={isTextMode}
+      isTextMode={isExeOutputTextMode}
     />
     {isStepByStep && exeState != null && <ValueVisualizer exeState={exeState} />}
   </div>;
