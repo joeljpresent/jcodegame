@@ -9,7 +9,7 @@ import ScriptVisualizer from "./ScriptVisualizer";
 import ValueVisualizer from "./ValueVisualizer";
 import ExeInputField from "./ExeInputField";
 import { createInputSuccess, ExeInput, parseInputField } from "./exe/input";
-import ExeInputDisplay from "./ExeInputDisplay";
+import ExeInputVisualizer from "./ExeInputVisualizer";
 import TextModeToggle from "./TextModeToggle";
 
 export default function CodeGame() {
@@ -95,24 +95,27 @@ export default function CodeGame() {
       <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
       <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
     </div>
-    <TextModeToggle
-      isTextMode={isExeInputTextMode}
-      onToggleTextMode={handleToggleExeInputTextMode}
-    />
+    <h2>Input</h2>
     {
       isStepByStep && exeState != null && exeInput.status === "success"
-        ? <ExeInputDisplay
+        ? <ExeInputVisualizer
           input={exeInput.value}
           nextInputIdx={exeState?.nextInputIdx ?? 0}
           isTextMode={isExeInputTextMode}
         />
-        : <ExeInputField
-          input={exeInput}
-          isTextMode={isExeInputTextMode}
-          onChange={handleExeInputChange}
-        />
+        : <>
+          <TextModeToggle
+            isTextMode={isExeInputTextMode}
+            onToggleTextMode={handleToggleExeInputTextMode}
+          />
+          <ExeInputField
+            input={exeInput}
+            isTextMode={isExeInputTextMode}
+            onChange={handleExeInputChange}
+          />
+        </>
     }
-
+    <h2>Script</h2>
     {
       isStepByStep && exeState != null
         ? <ScriptVisualizer exeState={exeState} />
@@ -133,6 +136,7 @@ export default function CodeGame() {
           : <button onClick={handleRun}>▶ Run</button>
       }
     </div>
+    <h2>Output</h2>
     <TextModeToggle
       isTextMode={isExeOutputTextMode}
       onToggleTextMode={handleToggleExeOutputTextMode}

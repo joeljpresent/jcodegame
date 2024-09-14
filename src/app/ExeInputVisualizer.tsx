@@ -1,6 +1,6 @@
 import { toUnicodeChar } from "./utils/unicode";
 
-export default function ExeInputDisplay({ input, nextInputIdx, isTextMode }: Props) {
+export default function ExeInputVisualizer({ input, nextInputIdx, isTextMode }: Props) {
   function getValueStyle(idx: number) {
     if (nextInputIdx == null) {
       return;

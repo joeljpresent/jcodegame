@@ -25,7 +25,6 @@ export default function ExeOutput({ output, error, isTextMode }: Props) {
   }
 
   return <>
-    <h2>Output</h2>
     <div>
       {outputDisplay()}
       {errorDisplay()}

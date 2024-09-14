@@ -2,7 +2,7 @@
 
 import { FormEvent } from "react";
 import { ExeInput, parseInputField } from "./exe/input";
-import ExeInputDisplay from "./ExeInputDisplay";
+import ExeInputVisualizer from "./ExeInputVisualizer";
 
 export default function ExeInputField({ input, onChange, isTextMode }: Props) {
 
@@ -27,7 +27,7 @@ export default function ExeInputField({ input, onChange, isTextMode }: Props) {
     <div>
       {
         input.status === "success"
-          ? <ExeInputDisplay
+          ? <ExeInputVisualizer
             input={input.value}
             nextInputIdx={null}
             isTextMode={isTextMode}
