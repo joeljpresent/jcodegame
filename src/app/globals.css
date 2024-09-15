@@ -26,6 +26,10 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+h2 {
+  font-weight: bold;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -3,7 +3,7 @@ import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
 const inter = IBM_Plex_Sans({
-  weight: "400",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
