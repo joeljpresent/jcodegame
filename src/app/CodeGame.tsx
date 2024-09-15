@@ -11,6 +11,7 @@ import ExeInputField from "./ExeInputField";
 import { createInputSuccess, ExeInput, parseInputField } from "./exe/input";
 import ExeInputVisualizer from "./ExeInputVisualizer";
 import TextModeToggle from "./TextModeToggle";
+import HelpDialog from "./HelpDialog";
 
 export default function CodeGame() {
   const [script, setScript] = useState("");
@@ -91,11 +92,19 @@ export default function CodeGame() {
   }
 
   return (
-    <section className="flex w-full">
+    <section className="flex flex-row w-full justify-center">
       <div className="pr-[1rem]">
+      <h2>JCodeGame</h2>
+      <HelpDialog />
         <div>
-          <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
-          <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
+          <input
+            name="stepByStepCheckbox"
+            type="checkbox"
+            onChange={handleToggleStepByStep}
+          />
+          <label className="pl-[5px]" htmlFor="stepByStepCheckbox">
+            Step-by-step mode
+          </label>
         </div>
         <h2>Input</h2>
         {
