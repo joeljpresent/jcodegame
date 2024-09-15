@@ -91,8 +91,8 @@ export default function CodeGame() {
   }
 
   return (
-    <div className="flex flex-row">
-      <div>
+    <section className="flex">
+      <div className="pr-[1rem] w-full">
         <div>
           <input name="stepByStepCheckbox" type="checkbox" onChange={handleToggleStepByStep} />
           <label htmlFor="stepByStepCheckbox">Step-by-step mode</label>
@@ -139,7 +139,7 @@ export default function CodeGame() {
           }
         </div>
       </div>
-      <div>
+      <div className="pl-[1rem] w-full">
         <h2>Output</h2>
         <TextModeToggle
           isTextMode={isExeOutputTextMode}
@@ -152,6 +152,6 @@ export default function CodeGame() {
         />
         {isStepByStep && exeState != null && <ValueVisualizer exeState={exeState} />}
       </div>
-    </div>
+    </section>
   );
 }
