@@ -19,16 +19,23 @@ export default function HelpDialog() {
     <dialog
       open={isShown}
       style={{
-        maxWidth: "20rem",
+        maxWidth: "30rem",
         padding: "2rem",
         borderWidth: "2px",
         borderRadius: "0.5rem",
       }}
     >
       <article>
-        <p>TODO: write Help</p>
+        <h1>JCodeGame</h1>
+        <p>
+          This website is a toy project by Joël J. Présent.
+          It is a coding environment for a custom, minimal language called "JCGL" (JCodeGame Language).
+        </p>
+        <p>
+          You can write a script, optionally read some input, and write to output.
+        </p>
       </article>
-      <button onClick={hideDialog}>
+      <button className="mt-2" onClick={hideDialog}>
         ✕ Close
       </button>
     </dialog>
