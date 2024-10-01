@@ -18,6 +18,7 @@ export function toUnicodeChar(n: number) {
 const ESCAPE: { [k: string]: number } = {
   "\\": "\\".charCodeAt(0),
   "'": "'".charCodeAt(0),
+  '"': '"'.charCodeAt(0),
   b: "\b".charCodeAt(0),
   f: "\f".charCodeAt(0),
   n: "\n".charCodeAt(0),
@@ -28,8 +29,39 @@ const ESCAPE: { [k: string]: number } = {
 export function parseCharLiteral(s: string): number {
   if (/^'[^\x00-\x1f'\\]'$/u.test(s)) {
     return s.codePointAt(1)!;
-  } else if (/^'\\[\\'bfnrt]'$/u.test(s)) {
+  } else if (/^'\\[\\'"bfnrt]'$/u.test(s)) {
     return ESCAPE[s.charAt(2)!];
   }
   throw Error(`invalid char literal: ${s}`);
+}
+
+export function parseStringLiteral(s: string) {
+  if (s.charAt(0) !== '"') {
+    throw Error("String literal must start with a double quote");
+  }
+  const numbers: number[] = [];
+  let idx = 1;
+  while (true) {
+    const char = s.charAt(idx);
+    const charCode = char.charCodeAt(0);
+    if (char === "\\") {
+      idx += 1;
+      const nextChar = s.charAt(idx);
+      const escaped = ESCAPE[nextChar];
+      if (escaped == null) {
+        throw Error(`Invalid escape sequence: \\${nextChar}`);
+      }
+      numbers.push(escaped);
+    } else if (charCode < 0x20) {
+      throw Error("Invalid control character");
+    } else if (Number.isNaN(charCode)) {
+      throw Error("Unexpected end of string");
+    } else if (char === '"') {
+      console.log({numbers});
+      return numbers;
+    } else {
+      numbers.push(charCode);
+    }
+    idx += 1;
+  }
 }
