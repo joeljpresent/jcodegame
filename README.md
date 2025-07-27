@@ -10,8 +10,6 @@ They are all initialized to zero.
 
 All values are 32-bit signed integers, i.e. a whole number between −2 147 483 648 and 2 147 483 647.
 
-## Syntax
-
 ### Value literals
 
 Values can be written in base 10 (`15`, `-3`) or in base 16 with the `0x` prefix (`0x2fc`, `-0xcafe`).
@@ -36,7 +34,7 @@ A dereference address consists of `*` followed by the cell index (`*0` to `*15`)
 This refers to the cell whose index is the value of the cell with the given index.
 For example, if the cell #4 has value `7`, then `*4` refers to the cell #7.
 
-### Script
+## Script
 
 The script must be written in JCGL (JCodeGame Language), a custom programming language with minimal instructions.
 Each instruction must be written as a single line that starts with a command name optionally followed by parameters.
@@ -46,16 +44,16 @@ Everything from the `#` character to the end of the line will be ignored by the 
 
 In the following command descriptions, a "value parameter" refers to a value literal, a cell address or a dereference address.
 
-#### Command `read`
+### Command `read`
 
 A single value is popped from the Input and assigned to *cur*.
 If this command is called when the Input is empty, the program will stop gracefully.
 
-#### Command `write`
+### Command `write`
 
 The *cur* value is pushed to the Output.
 
-#### Command `load`
+### Command `load`
 
 This command takes one value parameter.
 
@@ -67,7 +65,7 @@ For example:
 - `load @4` assigns the value of the cell #4 to *cur*
 - `load *4` assigns the value of the cell whose index is the value of the cell #4 to *cur*
 
-#### Command `store`
+### Command `store`
 
 This command takes one parameter that is a cell address or a dereference address.
 
@@ -78,7 +76,7 @@ For example:
 - `store @4` assigns the *cur* value to cell #4
 - `store *4` assigns the *cur* value to the cell whose index is the value of the cell #4
 
-#### Command `add`
+### Command `add`
 
 This command takes one value parameter.
 
@@ -86,7 +84,7 @@ The parameter's value is added to the *cur* value.
 
 For example, if the *cur* value is initially 10, `add 7` will change the *cur* value to 17 (i.e., 10 + 7).
 
-#### Command `sub`
+### Command `sub`
 
 This command takes one value parameter.
 
@@ -94,7 +92,7 @@ The parameter's value is substracted to the *cur* value.
 
 For example, if the *cur* value is initially 10, `sub 7` will change the *cur* value to 3 (i.e., 10 − 7).
 
-#### Command `label`
+### Command `label`
 
 This command takes one parameter that is a case-sensitive name which can only include letters, digits and `_`.
 
@@ -102,7 +100,7 @@ A label is an anchor in the script that can be used as destination for a jump co
 
 For example, `label start` creates a label that is named `start`.
 
-#### Command `jump`
+### Command `jump`
 
 This command takes a label name as a parameter.
 
@@ -110,7 +108,7 @@ The control flow breaks and goes to the label whose name is the provided paramet
 
 For example, `jump start` goes to the label called `start`.
 
-#### Command `jumpif`
+### Command `jumpif`
 
 This command takes three arguments:
 
