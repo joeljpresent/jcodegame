@@ -29,7 +29,7 @@ export default function HelpDialog() {
         <h1>JCodeGame</h1>
         <p>
           This website is a toy project by Joël J. Présent.
-          It is a coding environment for a custom, minimal language called "JCGL" (JCodeGame Language).
+          It is a coding environment for a custom, minimal language called &quot;JCGL&quot; (JCodeGame Language).
         </p>
         <p>
           You can write a script, optionally read some input, and write to output.
