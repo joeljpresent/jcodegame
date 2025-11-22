@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -34,6 +32,10 @@ h1 {
 h2 {
   font-weight: bold;
   padding-top: 1rem;
+}
+
+textarea {
+  background-color: white;
 }
 
 @layer utilities {
