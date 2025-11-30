@@ -137,14 +137,14 @@ export default function CodeGame() {
           {
             isStepByStep
               ? <>
-                <button onClick={handleResetExeState}>⏹ Reset</button>
+                <button onClick={handleResetExeState}>⏹︎ Reset</button>
                 {
                   exeState == null || shouldExeContinue(exeState)
-                    ? <button onClick={handleRunNextStep}>⏭ Next step</button>
+                    ? <button onClick={handleRunNextStep}>⏭︎ Next step</button>
                     : <button disabled>End</button>
                 }
               </>
-              : <button onClick={handleRun}>▶ Run</button>
+              : <button onClick={handleRun}>▶︎ Run</button>
           }
         </div>
       </div>

@@ -34,6 +34,12 @@ export default function HelpDialog() {
         <p>
           You can write a script, optionally read some input, and write to output.
         </p>
+        <a
+          className="font-bold"
+          href="https://github.com/joeljpresent/jcodegame/blob/main/README.md"
+        >
+          👉︎ More info 👈︎
+        </a>
       </article>
       <button className="mt-2" onClick={hideDialog}>
         ✕ Close
