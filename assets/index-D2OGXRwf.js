@@ -13101,7 +13101,15 @@ function HelpDialog() {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("article", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "JCodeGame" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: 'This website is a toy project by Joël J. Présent. It is a coding environment for a custom, minimal language called "JCGL" (JCodeGame Language).' }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "You can write a script, optionally read some input, and write to output." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "You can write a script, optionally read some input, and write to output." }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "a",
+              {
+                className: "font-bold",
+                href: "https://github.com/joeljpresent/jcodegame/blob/main/README.md",
+                children: "👉︎ More info 👈︎"
+              }
+            )
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "mt-2", onClick: hideDialog, children: "✕ Close" })
         ]
@@ -13221,9 +13229,9 @@ function CodeGame() {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-row justify-between", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleScriptClear, children: "✕ Clear" }),
         isStepByStep ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleResetExeState, children: "⏹ Reset" }),
-          exeState == null || shouldExeContinue(exeState) ? /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleRunNextStep, children: "⏭ Next step" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("button", { disabled: true, children: "End" })
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleRun, children: "▶ Run" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleResetExeState, children: "⏹︎ Reset" }),
+          exeState == null || shouldExeContinue(exeState) ? /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleRunNextStep, children: "⏭︎ Next step" }) : /* @__PURE__ */ jsxRuntimeExports.jsx("button", { disabled: true, children: "End" })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: handleRun, children: "▶︎ Run" })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pl-[1rem]", children: [
