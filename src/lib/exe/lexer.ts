@@ -1,6 +1,4 @@
-"use client";
-
-import { ExeError, isExeError } from "./error";
+import { type ExeError, isExeError } from "./error";
 
 function isWhiteSpace(char: string) {
   return [" ", "\t", "\r"].includes(char);

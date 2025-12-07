@@ -1,6 +1,6 @@
 "use client";
 
-import { ExeError, isExeError } from "./error";
+import { type ExeError, isExeError } from "./error";
 import { lexScript } from "./lexer";
 
 export interface ExeSettings {

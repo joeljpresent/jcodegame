@@ -2,7 +2,7 @@
 
 import { isInt32, parseInt32 } from "../utils/int32";
 import { parseCharLiteral } from "../utils/unicode";
-import { ExeSettings, ExeState, initExeState, setLineIdx, shouldExeContinue } from "./state";
+import { type ExeSettings, type ExeState, initExeState, setLineIdx, shouldExeContinue } from "./state";
 
 function runCommand(args: string[], state: ExeState): void {
   const checkCellIdx = (cellIdx: number): number => {

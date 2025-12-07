@@ -1,15 +1,8 @@
-import { defineConfig } from "vite";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react-swc";
+import { defineConfig } from 'vite'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig({
   base: "/jcodegame/",
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
-  build: {
-    minify: false,
-  }
-});
+  plugins: [svelte()],
+})
